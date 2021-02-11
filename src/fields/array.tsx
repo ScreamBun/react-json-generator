@@ -73,9 +73,9 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
 
   addOpt(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
-    const { max } = this.opts;
 
     this.setState(prevState => {
+      const { max } = this.opts;
       const maxBool = prevState.count < max;
       return {
         count: maxBool ? prevState.count + 1 : prevState.count,

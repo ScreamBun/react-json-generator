@@ -31,7 +31,7 @@ interface GeneratorState {
 }
 
 class Generator extends Component<GeneratorProps, GeneratorState> {
-  validator: Ajv.Ajv;
+  validator: Ajv;
 
   constructor(props: GeneratorProps) {
     super(props);

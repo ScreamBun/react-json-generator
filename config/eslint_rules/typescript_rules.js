@@ -135,7 +135,6 @@ module.exports = {
   '@typescript-eslint/no-shadow': 2,
   '@typescript-eslint/no-this-alias': 2,
   '@typescript-eslint/no-throw-literal': 2,
-  '@typescript-eslint/unbound-method': 1,
   '@typescript-eslint/no-unused-expressions': [2, {
     allowShortCircuit: false,
     allowTaggedTemplates: false,
