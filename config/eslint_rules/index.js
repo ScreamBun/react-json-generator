@@ -3,6 +3,7 @@ module.exports = {
   ...require('./eslint_rules'),
   ...require('./import_rules'),
   ...require('./jsx-a11y_rules'),
+  ...require('./prettier_rules'),
   ...require('./promise_rules'),
   ...require('./react_rules'),
   ...require('./react-hooks_rules'),

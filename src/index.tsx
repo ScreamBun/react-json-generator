@@ -1,41 +1,45 @@
+/* eslint react/static-property-placement: 1 */
 import React, { Component } from 'react';
 import Ajv, { ErrorObject } from 'ajv';
-import { GeneratorProvider as Provider, GeneratorProviderContext } from './context';
+import { GeneratorContext, GeneratorProviderContext } from './context';
 import Field, { JSONSchema } from './fields';
+import * as Schema from './fields/schema';
 import { delMultiKey, setMultiKey } from './utils';
 
 // Interfaces
-interface GeneratorChanges {
+export interface GeneratorChanges {
   jsObject: Record<string, any>;
   isValid: boolean;
   errors: Array<ErrorObject>;
 }
 
-interface GeneratorProviderProps {
+interface GeneratorProps {
   name: string;
   schema: JSONSchema;
   onChange?: (changes: GeneratorChanges) => void;
+  validate?: boolean
 }
 
-interface GeneratorProviderState {
+interface GeneratorState {
   message: {
     action?: string;
     target?: Record<string, any>;
     [prop: string]: any;
   };
   schema: JSONSchema;
-  validate?: boolean;
+  validate: boolean;
 }
 
-class GeneratorProvider extends Component<GeneratorProviderProps, GeneratorProviderState> {
+class Generator extends Component<GeneratorProps, GeneratorState> {
   validator: Ajv.Ajv;
 
-  constructor(props: GeneratorProviderProps) {
+  constructor(props: GeneratorProps) {
     super(props);
     this.onChange = this.onChange.bind(this);
-    const { schema } = props;
+    const { schema, validate } = this.props;
     this.state = {
       message: {},
+      validate: validate || false,
       schema
     };
 
@@ -63,7 +67,7 @@ class GeneratorProvider extends Component<GeneratorProviderProps, GeneratorProvi
       };
     },
     () => {
-      const { onChange } = this.props;
+      const { name, onChange } = this.props;
       if (onChange) {
         const { message, schema, validate } = this.state;
         const changes: GeneratorChanges = {
@@ -72,17 +76,23 @@ class GeneratorProvider extends Component<GeneratorProviderProps, GeneratorProvi
           errors: []
         };
         if (validate) {
+          // TODO: Validate message, more options??
+          let tmpMsg = message;
+          if ('properties' in schema && name in schema.properties) {
+            tmpMsg = {
+              [name]: message
+            };
+          }
           try {
-            const valid = this.validator.validate(schema, message);
-            if (!valid) {
-              changes.errors = this.validator.errors || [];
+            const valid = this.validator.validate(schema, tmpMsg);
+            if (!valid && this.validator.errors) {
+              changes.errors = this.validator.errors;
             }
           } catch (err) {
             changes.errors.push(err);
           }
           changes.isValid = changes.errors.length === 0;
         }
-        console.log(changes);
         onChange(changes);
       }
     });
@@ -107,17 +117,19 @@ class GeneratorProvider extends Component<GeneratorProviderProps, GeneratorProvi
     }
 
     return (
-      <Provider value={ this.getContext() }>
+      <GeneratorContext.Provider value={ this.getContext() }>
         <Field
           root
           name={ name }
           def={ schema.definitions[name] }
           optChange={ this.onChange }
         />
-      </Provider>
+      </GeneratorContext.Provider>
     );
   }
 }
 
-
-export default GeneratorProvider;
+export default Generator;
+export {
+  Schema
+};

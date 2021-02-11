@@ -18,6 +18,4 @@ export const GeneratorContext = createContext<GeneratorProviderContext>({
   }
 });
 
-export const GeneratorConsumer = GeneratorContext.Consumer;
-export const GeneratorProvider = GeneratorContext.Provider;
 export const useGenerator = () => useContext(GeneratorContext);

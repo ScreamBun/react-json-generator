@@ -81,7 +81,7 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
             className='float-right p-1'
             onClick={ () => this.setState(prevState => ({ open: !prevState.open })) }
           >
-            <Icon size="lg" />
+            <Icon size="1.5em" />
           </Button>
           { `${required ? '*' : ''}${name}` }
         </legend>

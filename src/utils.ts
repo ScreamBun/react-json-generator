@@ -17,13 +17,14 @@ export const setMultiKey = (obj: Record<string, any>, key: string, val: any): vo
 };
 
 // Get value of a nested key
-export function getMultiKey<T>(obj: Record<string, T>, key: string): T | undefined {
+export function getMultiKey<T>(obj: Record<string, any>, key: string): T | undefined {
   const k = key.replace(/\[\]$/, '');
   const keys = k.split('.');
 
   if (keys.length > 1) {
     return keys[0] in obj ? getMultiKey(obj[keys[0]], keys.slice(1).join('.')) : undefined;
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return k in obj ? obj[k] : undefined;
 }
 

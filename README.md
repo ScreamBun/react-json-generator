@@ -10,8 +10,7 @@ npm install https://github.com/czack425/react-json-generator.git
 ### Setup
 The theme switcher works by dynamically modifying the document's style element to switch between the Bootswatch themes. There are two components:
 
- * A ```ThemeSwitcher``` component that wraps your top-level component. This is responsible for theme loading and hiding your app during the load.
- * A ```ThemeChooser``` component that displays a dropdown button select menu allowing the user to choose a theme.
+ * A ```Generator``` component that results in a dynamic form for message generation based on a given schema.
 
 The ThemeSwitcher will make sure your app is not displayed until the selected theme is loaded, and will also hide it whenever the ThemeChooser selects a new theme. Here is an example of an app that uses the Redux Provider and React Router rendered in index.js:
 

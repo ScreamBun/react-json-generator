@@ -13,8 +13,8 @@ const BasicFieldTypes = [
 // Interfaces
 interface BasicFieldProps {
   def: PrimitivePropertyDefinitions;
+  name: string;
   optChange: (name: string, val: number|string, ai?: boolean|number) => void;
-  name?: string;
   parent?: string;
   required?: boolean;
   root?: boolean;

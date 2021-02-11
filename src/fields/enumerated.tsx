@@ -5,8 +5,8 @@ import { EnumeratedDefinition } from './schema';
 // Interfaces
 interface EnumeratedFieldProps {
   def: EnumeratedDefinition;
+  name: string;
   optChange: (name: string, val: number|string) => void;
-  name?: string;
   required?: boolean;
   parent?: string;
 }

@@ -1,4 +1,5 @@
-import React, { Component, ContextType } from 'react';
+/* eslint-disable react/static-property-placement */
+import React, { Component } from 'react';
 import classNames from 'classnames';
 import { Button, FormGroup, FormText } from 'reactstrap';
 import { FaMinusSquare, FaPlusSquare } from 'react-icons/fa';
@@ -21,19 +22,12 @@ interface ArrayFieldState {
   min: boolean;
   max: boolean;
   count: number;
-  opts: {
-    min?: number;
-    max?: number;
-  };
+  opts: Record<number, any>;
 }
 
 // Component
 class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
-  // eslint-disable-next-line react/static-property-placement
-  static contextType: typeof GeneratorContext;
-  // eslint-disable-next-line react/static-property-placement
-  context!: ContextType<typeof GeneratorContext>;
-  // eslint-disable-next-line react/static-property-placement
+  static contextType = GeneratorContext;
   static defaultProps = {
     name: 'Array',
     parent: ''
@@ -89,10 +83,12 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
       };
     }, () => {
       const { name, optChange } = this.props;
-      const { opts } = this.state;
+      const { max, opts } = this.state;
 
       optChange(this.parent, [ ...new Set(objectValues(opts)) ]);
-      throw Error(`Cannot have more than ${this.opts.max} items for ${name}`);
+      if (max) {
+        throw Error(`Cannot have more than ${this.opts.max} items for ${name}`);
+      }
     });
   }
 
@@ -123,13 +119,12 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
     });
   }
 
-  optChange(k: string, v: any, ai?: boolean|number) {
-    if (ai && typeof ai === 'number') {
+  optChange(_k: string, v: any, ai?: boolean|number) {
+    if (typeof ai === 'number') {
       this.setState((prevState) => {
         return {
           opts: {
             ...prevState.opts,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             [ai]: v
           }
         };
@@ -143,10 +138,8 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
   }
 
   render() {
+    const { def, name, required } = this.props;
     const { schema } = this.context;
-    const {
-      def, name, required
-    } = this.props;
     const { count, max, min } = this.state;
 
     this.desc = def.description || '';
@@ -196,14 +189,14 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
             className={ classNames('float-right', 'p-1', { 'disabled': min }) }
             onClick={ this.removeOpt }
           >
-            <FaMinusSquare size="lg" />
+            <FaMinusSquare size="1.25em" />
           </Button>
           <Button
             color="primary"
             className={ classNames('float-right', 'p-1', { 'disabled': max }) }
             onClick={ this.addOpt }
           >
-            <FaPlusSquare size="lg" />
+            <FaPlusSquare size="1.25em" />
           </Button>
         </legend>
         { this.desc ? <FormText color="muted">{ this.desc }</FormText> : '' }
