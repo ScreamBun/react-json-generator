@@ -90,7 +90,7 @@ class Field extends Component<FieldProps> {
         }
         return <BasicField def={ fieldDef as PrimitivePropertyDefinitions } { ...fieldArgs } />;
     }
-  };
+  }
 }
 
 export default Field;

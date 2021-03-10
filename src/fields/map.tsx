@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
   Button, Collapse, FormGroup, FormText
 } from 'reactstrap';
-import { FaMinusSquare, FaPlusSquare } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 // eslint-disable-next-line import/no-cycle
 import Field from './field';
 import { MapDefinition } from './schema';
@@ -71,7 +72,7 @@ class MapField extends Component<MapFieldProps, MapFieldState> {
       // TODO: Pattern Properties
       console.warn('Map Pattern Props', def.patternProperties);
     }
-    const Icon = open ? FaMinusSquare : FaPlusSquare;
+    const icon = open ? faMinusSquare : faPlusSquare;
     return (
       <FormGroup tag="fieldset" className="border border-dark p-2">
         <legend>
@@ -80,7 +81,7 @@ class MapField extends Component<MapFieldProps, MapFieldState> {
             className='float-right p-1'
             onClick={ () => this.setState(prevState => ({ open: !prevState.open })) }
           >
-            <Icon size="1.5em" />
+            <FontAwesomeIcon icon={ icon } size="lg" />
           </Button>
           { `${required ? '*' : ''}${name}` }
         </legend>
