@@ -1,5 +1,5 @@
 {
-  "name": "react-message-generator",
+  "name": "react-json-generator",
   "version": "1.0.1",
   "description": "A React component to assist in creation of a message based on a json schema",
   "homepage": "https://github.com/czack425/react-json-generator#readme",
