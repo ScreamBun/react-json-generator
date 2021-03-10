@@ -63,13 +63,7 @@ module.exports = {
       'getSnapshotBeforeUpdate'
     ]
   }],
-  'comma-dangle': [0, {
-    arrays: 'always-multiline',
-    exports: 'always-multiline',
-    functions: 'always-multiline',
-    imports: 'always-multiline',
-    objects: 'always-multiline'
-  }],
+  'comma-dangle': [2, 'never'],
   'comma-spacing': [2, {
     after: true,
     before: false
@@ -101,10 +95,9 @@ module.exports = {
   'default-case-last': 0,
   'default-param-last': 0,
   'dot-location': [0, 'property'],
-  'dot-notation': [0, {
+  'dot-notation': [2, {
     allowKeywords: true,
-    allowPattern: '',
-    allowPrivateClassPropertyAccess: false
+    allowPattern: ''
   }],
   'eol-last': [0, 'always'],
   'eqeqeq': [2, 'always', {
@@ -136,7 +129,7 @@ module.exports = {
   'id-denylist': 0,
   'id-length': 0,
   'id-match': 0,
-  'implicit-arrow-linebreak': [0, 'beside'],
+  'implicit-arrow-linebreak': [2, 'beside'],
   'indent': [0, 2, {
     ArrayExpression: 1,
     CallExpression: {
@@ -240,7 +233,7 @@ module.exports = {
     max: 1
   }],
   'multiline-comment-style': [0, 'starred-block'],
-  'multiline-ternary': [0, 'never'],
+  'multiline-ternary': [1, 'never'],
   'new-cap': [2, {
     capIsNew: false,
     capIsNewExceptions: ['Immutable.Map', 'Immutable.Set', 'Immutable.List'],
@@ -255,7 +248,7 @@ module.exports = {
     ignoreChainWithDepth: 4
   }],
   'no-alert': 1,
-  'no-array-constructor': 0,
+  'no-array-constructor': 2,
   'no-arrow-condition': 0,
   'no-async-promise-executor': 2,
   'no-await-in-loop': 2,
@@ -273,7 +266,7 @@ module.exports = {
   }],
   'no-console': 1,
   'no-const-assign': 2,
-  'no-constant-condition': 1,
+  'no-constant-condition': 2,
   'no-constructor-return': 0,
   'no-continue': 2,
   'no-control-regex': 2,
@@ -291,7 +284,7 @@ module.exports = {
   }],
   'no-empty': 2,
   'no-empty-character-class': 2,
-  'no-empty-function': [0, {
+  'no-empty-function': [2, {
     allow: ['arrowFunctions', 'functions', 'methods']
   }],
   'no-empty-pattern': 2,
@@ -309,7 +302,7 @@ module.exports = {
     nestedBinaryExpressions: false,
     returnAssign: false
   }],
-  'no-extra-semi': 1,
+  'no-extra-semi': 2,
   'no-fallthrough': 0,
   'no-floating-decimal': 0,
   'no-func-assign': 2,
@@ -323,7 +316,7 @@ module.exports = {
     string: true
   }],
   'no-implicit-globals': 0,
-  'no-implied-eval': 0,
+  'no-implied-eval': 2,
   'no-import-assign': 0,
   'no-inline-comments': 0,
   'no-inner-declarations': 2,
@@ -383,7 +376,7 @@ module.exports = {
   'no-new-require': 2,
   'no-new-symbol': 2,
   'no-new-wrappers': 2,
-  'no-obj-calls': 0,
+  'no-obj-calls': 2,
   'no-octal': 2,
   'no-octal-escape': 2,
   'no-param-reassign': [2, {
@@ -547,18 +540,18 @@ module.exports = {
   }],
   'no-self-compare': 2,
   'no-sequences': 2,
-  'no-setter-return': 0,
+  'no-setter-return': 2,
   'no-shadow': 2,
   'no-shadow-restricted-names': 2,
   'no-space-before-semi': 0,
-  'no-spaced-func': 0,
+  'no-spaced-func': 2,
   'no-sparse-arrays': 2,
   'no-sync': 0,
   'no-tabs': 0,
   'no-template-curly-in-string': 2,
   'no-ternary': 0,
   'no-this-before-super': 2,
-  'no-throw-literal': 0,
+  'no-throw-literal': 2,
   'no-trailing-spaces': [2, {
     ignoreComments: false,
     skipBlankLines: false
@@ -574,7 +567,7 @@ module.exports = {
     allowFunctionParams: true,
     enforceInMethodNames: false
   }],
-  'no-unexpected-multiline': 0,
+  'no-unexpected-multiline': 1,
   'no-unmodified-loop-condition': 0,
   'no-unneeded-ternary': [2, {
     defaultAssignment: false
@@ -661,7 +654,7 @@ module.exports = {
   'one-var': [2, 'never'],
   'one-var-declaration-per-line': [0, 'always'],
   'operator-assignment': [2, 'always'],
-  'operator-linebreak': [2, 'before', {
+  'operator-linebreak': [2, 'after', {
     overrides: {
       '=': 'none'
     }

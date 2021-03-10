@@ -4,17 +4,16 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:import/typescript',
     'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    'plugin:jest/recommended',
     'plugin:promise/recommended',
     'plugin:compat/recommended',
     'plugin:react-hooks/recommended',
     'plugin:prettier/recommended',
     'prettier/@typescript-eslint',
-    'prettier/react',
+    'prettier/react'
   ],
   env: {
-    browser: true,
-    es6: true
+    browser: true
   },
   globals: {
     JSX: true,
@@ -32,7 +31,8 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: 'module',
     project: 'tsconfig.json',
-    tsconfigRootDir: __dirname
+    tsconfigRootDir: __dirname,
+    createDefaultProgram: true
   },
   rules: {
     /*
@@ -50,12 +50,12 @@ module.exports = {
     'import/resolver': {
       // See https://github.com/benmosher/eslint-plugin-import/issues/1396#issuecomment-575727774 for line below
       node: {},
+      react: {
+        version: 'detect'
+      },
       webpack: {
         config: require.resolve('./config/config.eslint.js')
       }
-    },
-    react: {
-      version: 'detect'
     }
   }
 };
