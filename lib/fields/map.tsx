@@ -57,16 +57,19 @@ class MapField extends Component<MapFieldProps, MapFieldState> {
     } = this.props;
     const { open } = this.state;
 
-    const defOpts = Object.keys(def.properties).map(field => (
-      <Field
-        key={ field }
-        def={ def.properties[field] }
-        optChange={ optChange }
-        name={ field }
-        parent={ this.getParent() }
-        required={ isOptionalJSON(def.required || [], field) }
-      />
-    ));
+    const defOpts: Array<JSX.Element> = [];
+    if ('properties' in def) {
+      defOpts.push(...Object.keys(def.properties).map(field => (
+        <Field
+          key={ field }
+          def={ def.properties[field] }
+          optChange={ optChange }
+          name={ field }
+          parent={ this.getParent() }
+          required={ isOptionalJSON(def.required || [], field) }
+        />
+      )));
+    }
 
     if (def.patternProperties) {
       // TODO: Pattern Properties

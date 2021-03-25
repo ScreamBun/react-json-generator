@@ -258,16 +258,17 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# Packed files
-lib
-
 # Non-packaged files
 config
 scripts
 test
 
+# Compiled files
+lib/**/*.js
+lib/**/*.d.ts
+
 # Assorted
 .eslintrc.js
 babel.config.js
 docs
-src/@types
+lib/@types
