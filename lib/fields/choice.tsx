@@ -65,10 +65,13 @@ class ChoiceField extends Component<ChoiceFieldProps, ChoiceFieldState> {
     } = this.props;
     const { selected } = this.state;
 
-    const defOpts = Object.keys(def.properties).map(field => {
-      const d = def.properties[field];
-      return (<option key={ field } data-subtext={ d.description || '' } value={ field }>{ field }</option>);
-    });
+    const defOpts: Array<JSX.Element> = [];
+    if ('properties' in def) {
+      defOpts.push(...Object.keys(def.properties).map(field => {
+        const d = def.properties[field];
+        return (<option key={ field } data-subtext={ d.description || '' } value={ field }>{ field }</option>);
+      }));
+    }
 
     if ('patternProperties' in def) {
       // TODO: Pattern Properties

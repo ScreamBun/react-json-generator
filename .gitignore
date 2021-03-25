@@ -160,11 +160,11 @@ typings/
 
 # Built Files
 /dist/
-/src/**/*.d.ts
-/src/**/*.js
+/lib/**/*.d.ts
+/lib/**/*.js
 
 # Definitions
-!src/@types/**/*.d.ts
+!lib/@types/**/*.d.ts
 
 # Custom Ignore
 .idea/*
