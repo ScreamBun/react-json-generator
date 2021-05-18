@@ -2,8 +2,7 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import { Button, FormGroup, FormText } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { FaMinusSquare, FaPlusSquare } from 'react-icons/fa';
 // eslint-disable-next-line import/no-cycle
 import Field from './field';
 import { ArrayDefinition, PropertyDefinition } from './schema';
@@ -86,7 +85,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
       const { name, optChange } = this.props;
       const { max, opts } = this.state;
 
-      optChange(this.parent, [ ...new Set(objectValues(opts)) ]);
+      optChange(this.parent, Array.from(new Set(objectValues(opts))));
       if (max) {
         throw Error(`Cannot have more than ${this.opts.max} items for ${name}`);
       }
@@ -113,7 +112,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
       const { name, optChange } = this.props;
       const { min, opts } = this.state;
 
-      optChange(this.parent, [ ...new Set(objectValues(opts)) ]);
+      optChange(this.parent, Array.from(new Set(objectValues(opts))));
       if (min) {
         throw Error(`Cannot have less than ${this.opts.min} items for ${name}`);
       }
@@ -190,14 +189,14 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
             className={ classNames('float-right', 'p-1', { 'disabled': min }) }
             onClick={ this.removeOpt }
           >
-            <FontAwesomeIcon icon={ faMinusSquare } size="lg" />
+            <FaMinusSquare size="1.3333333333em" />
           </Button>
           <Button
             color="primary"
             className={ classNames('float-right', 'p-1', { 'disabled': max }) }
             onClick={ this.addOpt }
           >
-            <FontAwesomeIcon icon={ faPlusSquare } size="lg" />
+            <FaPlusSquare size="1.3333333333em" />
           </Button>
         </legend>
         { this.desc ? <FormText color="muted">{ this.desc }</FormText> : '' }

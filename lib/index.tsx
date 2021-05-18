@@ -1,6 +1,7 @@
 /* eslint react/static-property-placement: 1 */
 import React, { Component } from 'react';
 import Ajv, { ErrorObject } from 'ajv';
+import addFormats from 'ajv-formats';
 import { GeneratorContext, GeneratorProviderContext } from './context';
 import Field, { JSONSchema } from './fields';
 import * as Schema from './fields/schema';
@@ -44,10 +45,13 @@ class Generator extends Component<GeneratorProps, GeneratorState> {
     };
 
     this.validator = new Ajv({
+      strict: false
       // unknownFormats: 'ignore'
     });
+    addFormats(this.validator);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onChange(key: string, val: any, _ai?: boolean|number) {
     this.setState(prevState => {
       const { message } = prevState;
