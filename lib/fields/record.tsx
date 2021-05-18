@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import {
   Button, Collapse, FormGroup, FormText
 } from 'reactstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { FaMinusSquare, FaPlusSquare } from 'react-icons/fa';
 // eslint-disable-next-line import/no-cycle
 import Field from './field';
 import { RecordDefinition } from './schema';
@@ -73,7 +72,7 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
     if (root) {
       return defOpts;
     }
-    const icon = open ? faMinusSquare : faPlusSquare;
+    const Icon = open ? FaMinusSquare : FaPlusSquare;
     return (
       <FormGroup tag="fieldset" className="border border-dark p-2">
         <legend>
@@ -82,7 +81,7 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
             className='float-right p-1'
             onClick={ () => this.setState(prevState => ({ open: !prevState.open })) }
           >
-            <FontAwesomeIcon icon={ icon } size="lg" />
+            <Icon size="1.3333333333em" />
           </Button>
           { `${required ? '*' : ''}${name}` }
         </legend>

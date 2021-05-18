@@ -4,6 +4,7 @@ import { JSONSchema } from './fields/schema';
 
 export interface GeneratorProviderContext {
   schema: JSONSchema;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   updateField?: (k: string, v: any, ai?: boolean|number) => void;
 }
 
