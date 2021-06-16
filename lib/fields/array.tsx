@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import { Button, FormGroup, FormText } from 'reactstrap';
-import { FaMinusSquare, FaPlusSquare } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 // eslint-disable-next-line import/no-cycle
 import Field from './field';
 import { ArrayDefinition, PropertyDefinition } from './schema';
@@ -189,14 +190,14 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
             className={ classNames('float-right', 'p-1', { 'disabled': min }) }
             onClick={ this.removeOpt }
           >
-            <FaMinusSquare size="1.3333333333em" />
+            <FontAwesomeIcon icon={ faMinusSquare } size="lg" />
           </Button>
           <Button
             color="primary"
             className={ classNames('float-right', 'p-1', { 'disabled': max }) }
             onClick={ this.addOpt }
           >
-            <FaPlusSquare size="1.3333333333em" />
+            <FontAwesomeIcon icon={ faPlusSquare } size="lg" />
           </Button>
         </legend>
         { this.desc ? <FormText color="muted">{ this.desc }</FormText> : '' }
