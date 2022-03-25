@@ -93,7 +93,7 @@ class Generator extends Component<GeneratorProps, GeneratorState> {
               changes.errors = this.validator.errors;
             }
           } catch (err) {
-            changes.errors.push(err);
+            changes.errors.push(err as ErrorObject);
           }
           changes.isValid = changes.errors.length === 0;
         }
