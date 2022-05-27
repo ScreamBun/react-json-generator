@@ -14,7 +14,7 @@ const BasicFieldTypes = [
 interface BasicFieldProps {
   def: PrimitivePropertyDefinitions;
   name: string;
-  optChange: (name: string, val: number|string, ai?: boolean|number) => void;
+  optChange: (name: string, val: boolean|number|string, ai?: boolean|number) => void;
   parent?: string;
   required?: boolean;
   root?: boolean;
@@ -24,7 +24,8 @@ interface BasicFieldProps {
 interface InputOptions {
   type: 'checkbox' | 'number' |'text'
   placeholder?: string;
-  style?: CSSProperties
+  style?: CSSProperties,
+  onChange: (val: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 // Component
@@ -43,15 +44,15 @@ const BasicField: FunctionComponent<BasicFieldProps> = props => {
   const fieldName = name || def.title || 'Basic Field';
   const msgName = (parent ? [parent, fieldName] : [fieldName]).join('.');
 
-  const change = (val: string) => {
+  const change = (val: boolean | string) => {
     const { arr } = props;
-    let v: number | string = val;
+    let v: boolean | number | string = val;
     switch (def.type) {
       case 'integer':
-        v = parseInt(val, 10) || val;
+        v = parseInt(val as string, 10) || val;
         break;
       case 'number':
-        v = parseFloat(val.replace(',', '.')) || val;
+        v = parseFloat((val as string).replace(',', '.')) || val;
         break;
       // no default
     }
@@ -66,7 +67,8 @@ const BasicField: FunctionComponent<BasicFieldProps> = props => {
       case 'integer':
         return {
           type: 'number',
-          placeholder: '0'
+          placeholder: '0',
+          onChange: e => change(e.target.value)
         };
       case 'boolean':
         return {
@@ -74,11 +76,13 @@ const BasicField: FunctionComponent<BasicFieldProps> = props => {
           style: {
             position: 'inherit',
             marginLeft: 0
-          }
+          },
+          onChange: e => change(e.target.checked)
         };
       default:
         return {
-          type: 'text'
+          type: 'text',
+          onChange: e => change(e.target.value)
         };
     }
   };
@@ -91,7 +95,6 @@ const BasicField: FunctionComponent<BasicFieldProps> = props => {
         <Input
           { ...opts }
           name={ name }
-          onChange={ e => change(e.target.value) }
         />
         { def.description ? <FormText color="muted">{ def.description }</FormText> : '' }
       </FormGroup>
