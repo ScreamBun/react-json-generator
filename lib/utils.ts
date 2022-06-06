@@ -34,10 +34,13 @@ export function getMultiKey<V>(obj: Record<string, any>, key: string): V | undef
   const k = key.replace(/\[\]$/, '');
   const keys = k.split('.');
 
-  if (keys.length > 1) {
-    return keys[0] in obj ? getMultiKey(obj[keys[0]], keys.slice(1).join('.')) : undefined;
+  if (obj !== undefined) {
+    if (keys.length > 1) {
+      return keys[0] in obj ? getMultiKey(obj[keys[0]], keys.slice(1).join('.')) : undefined;
+    }
+    return k in obj ? obj[k] : undefined;
   }
-  return k in obj ? obj[k] : undefined;
+  return undefined;
 }
 
 /**
@@ -50,10 +53,12 @@ export const delMultiKey = (obj: Record<string, any>, key: string): void => {
   const k = key.replace(/\[\]$/, '');
   const keys = k.split('.');
 
-  if (keys.length > 1) {
-    delMultiKey(obj[keys[0]], keys.slice(1).join('.'));
-  } else if (obj && keys[0] in obj) {
-    // eslint-disable-next-line no-param-reassign
-    delete obj[keys[0]];
+  if (obj !== undefined) {
+    if (keys.length > 1) {
+      delMultiKey(obj[keys[0]], keys.slice(1).join('.'));
+    } else if (keys[0] in obj) {
+      // eslint-disable-next-line no-param-reassign
+      delete obj[keys[0]];
+    }
   }
 };
