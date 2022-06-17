@@ -49,7 +49,7 @@ module.exports = {
         version: 'detect'
       },
       webpack: {
-        config: require.resolve('./config/config.eslint.js')
+        config: require.resolve('./config/webpack.config.eslint.js')
       }
     }
   }
