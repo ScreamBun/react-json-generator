@@ -2,7 +2,7 @@
   "name": "react-json-generator",
   "version": "1.1.4",
   "description": "A React component to assist in creation of a message based on a json schema",
-  "homepage": "https://github.com/czack425/react-json-generator#readme",
+  "homepage": "https://github.com/ScreamBun/react-json-generator#readme",
   "license": "ISC",
   "main": "lib/index.js",
   "scripts": {
@@ -123,10 +123,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/czack425/react-json-generator"
+    "url": "https://github.com/ScreamBun/react-json-generator"
   },
   "bugs": {
-    "url": "https://github.com/czack425/react-json-generator/issues"
+    "url": "https://github.com/ScreamBun/react-json-generator/issues"
   },
   "keywords": [
     "Bootstrap",
