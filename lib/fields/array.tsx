@@ -1,7 +1,7 @@
 /* eslint-disable react/static-property-placement */
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import { Button, FormGroup, FormText } from 'reactstrap';
+import { Button, ButtonGroup, Card, CardBody, CardHeader, CardTitle, FormGroup, FormText } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 // eslint-disable-next-line import/no-cycle
@@ -88,7 +88,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
 
       optChange(this.parent, Array.from(new Set(objectValues(opts))));
       if (max) {
-        throw Error(`Cannot have more than ${this.opts.max} items for ${name}`);
+        console.error(`Cannot have more than ${this.opts.max} items for ${name}`);
       }
     });
   }
@@ -106,7 +106,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
 
       return {
         opts,
-        count: minBool ? count-1 : count,
+        count: minBool ? count - 1 : count,
         min: !minBool
       };
     }, () => {
@@ -115,12 +115,12 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
 
       optChange(this.parent, Array.from(new Set(objectValues(opts))));
       if (min) {
-        throw Error(`Cannot have less than ${this.opts.min} items for ${name}`);
+        console.error(`Cannot have less than ${this.opts.min} items for ${name}`);
       }
     });
   }
 
-  optChange(_k: string, v: any, ai?: boolean|number) {
+  optChange(_k: string, v: any, ai?: boolean | number) {
     if (typeof ai === 'number') {
       this.setState((prevState) => {
         return {
@@ -133,7 +133,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
         const { optChange } = this.props;
         const { opts } = this.state;
 
-        optChange(this.parent, [ ...new Set(objectValues(opts)) ]);
+        optChange(this.parent, [...new Set(objectValues(opts))]);
       });
     }
   }
@@ -146,16 +146,16 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
     this.desc = def.description || '';
     const fields = [];
 
-    for (let i=0; i < count; ++i) {
+    for (let i = 0; i < count; ++i) {
       if (Array.isArray(def.items)) {
         fields.push(...def.items.map(field => (
           <Field
-            key={ i }
-            def={ field }
-            optChange={ this.optChange }
-            idx={ i }
-            name={ '$ref' in field ? field.$ref.replace(/^#\/definitions\//, '') : '' }
-            parent={ this.parent }
+            key={i}
+            def={field}
+            optChange={this.optChange}
+            idx={i}
+            name={'$ref' in field ? field.$ref.replace(/^#\/definitions\//, '') : ''}
+            parent={this.parent}
           />
         )));
       } else {
@@ -170,38 +170,48 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
         }
         fields.push(
           <Field
-            key={ i }
-            def={ ref as PropertyDefinition }
-            optChange={ this.optChange }
-            name={ fieldName }
-            idx={ i }
-            parent={ this.parent }
+            key={i}
+            def={ref as PropertyDefinition}
+            optChange={this.optChange}
+            name={fieldName}
+            idx={i}
+            parent={this.parent}
           />
         );
       }
     }
 
     return (
-      <FormGroup tag="fieldset" className="border border-dark p-2">
-        <legend>
-          { `${required ? '' : '*'}${name}` }
-          <Button
-            color="danger"
-            className={ classNames('float-right', 'p-1', { 'disabled': min }) }
-            onClick={ this.removeOpt }
-          >
-            <FontAwesomeIcon icon={ faMinusSquare } size="lg" />
-          </Button>
-          <Button
-            color="primary"
-            className={ classNames('float-right', 'p-1', { 'disabled': max }) }
-            onClick={ this.addOpt }
-          >
-            <FontAwesomeIcon icon={ faPlusSquare } size="lg" />
-          </Button>
-        </legend>
-        { this.desc ? <FormText color="muted">{ this.desc }</FormText> : '' }
-        { fields }
+      <FormGroup>
+        <Card>
+          <CardHeader>
+            <ButtonGroup className='float-right'>
+              <Button
+                color="danger"
+                className={classNames('float-right', { 'disabled': min })}
+                onClick={this.removeOpt}
+              >
+                <FontAwesomeIcon icon={faMinusSquare} size="lg" />
+              </Button>
+              <Button
+                color="primary"
+                className={classNames('float-right', { 'disabled': max })}
+                onClick={this.addOpt}
+              >
+                <FontAwesomeIcon icon={faPlusSquare} size="lg" />
+              </Button>
+            </ButtonGroup>
+            <CardTitle> <h4 className="inline-block">{name}{required ? <span style={{color:'red'}}>*</span> : ''}</h4>
+              {this.desc ? <FormText color="muted">{this.desc}</FormText> : ''}</CardTitle>
+
+            {count == this.opts.max ? <div style={{ color: 'red' }}>REQUIREMENT: Maximum of {this.opts.max} </div> : ''}
+            {count == this.opts.min ? <div style={{ color: 'red' }}>REQUIREMENT: Minimum of {this.opts.min} </div> : ''}
+
+          </CardHeader>
+          <CardBody className='mx-3'>
+            {fields}
+          </CardBody>
+        </Card>
       </FormGroup>
     );
   }

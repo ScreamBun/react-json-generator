@@ -8,7 +8,7 @@ import { ChoiceDefinition } from './schema';
 interface ChoiceFieldProps {
   def: ChoiceDefinition;
   name: string;
-  optChange: (name: string, val: any, ai?: boolean|number) => void;
+  optChange: (name: string, val: any, ai?: boolean | number) => void;
   required?: boolean;
   parent?: string;
 }
@@ -54,7 +54,7 @@ class ChoiceField extends Component<ChoiceFieldProps, ChoiceFieldState> {
       const { selected } = this.state;
 
       if (selected === '') {
-       optChange(def.type, undefined);
+        optChange(def.type, undefined);
       }
     });
   }
@@ -69,7 +69,7 @@ class ChoiceField extends Component<ChoiceFieldProps, ChoiceFieldState> {
     if ('properties' in def) {
       defOpts.push(...Object.keys(def.properties).map(field => {
         const d = def.properties[field];
-        return (<option key={ field } data-subtext={ d.description || '' } value={ field }>{ field }</option>);
+        return (<option key={field} data-subtext={d.description || ''} value={field}>{field}</option>);
       }));
     }
 
@@ -82,27 +82,27 @@ class ChoiceField extends Component<ChoiceFieldProps, ChoiceFieldState> {
     if (selected) {
       selectedDef = (
         <Field
-          def={ def.properties[selected] || {} }
-          optChange={ optChange }
-          name={ selected }
-          parent={ this.getParent() }
+          def={def.properties[selected] || {}}
+          optChange={optChange}
+          name={selected}
+          parent={this.getParent()}
           required
         />
       );
     }
 
     return (
-      <FormGroup tag="fieldset" className="border border-dark p-2">
-        <legend>{ `${required ? '*' : ''}${name}` }</legend>
-        { def.description ? <FormText color="muted">{ def.description }</FormText> : '' }
+      <FormGroup>
+        <h4>{name}{required ? <span style={{color:'red'}}>*</span> : ''}</h4>
+        {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
         <div className="col-12 my-1 px-0">
-          <Input type="select" name={ name } title={ name } className="selectpicker" onChange={ this.handleChange } default={ -1 }>
-            <option data-subtext={ `${name} options` } value="" >{ `${name} options` }</option>
-            { defOpts }
+          <Input type="select" name={name} title={name} className="selectpicker" onChange={this.handleChange} default={-1}>
+            <option data-subtext={`${name} options`} value="" >{`${name} options`}</option>
+            {defOpts}
           </Input>
 
           <div className="col-12 py-2">
-            { selectedDef }
+            {selectedDef}
           </div>
         </div>
       </FormGroup>

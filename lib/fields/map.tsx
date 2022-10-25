@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  Button, Collapse, FormGroup, FormText
+  Button, ButtonGroup, Card, CardBody, CardHeader, CardTitle, Collapse, FormGroup, FormText
 } from 'reactstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinusSquare, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,7 @@ import { isOptionalJSON } from './utils';
 export interface MapFieldProps {
   def: MapDefinition;
   name: string;
-  optChange: (name: string, val: any, ai?: boolean|number) => void;
+  optChange: (name: string, val: any, ai?: boolean | number) => void;
   required?: boolean;
   parent?: string;
 }
@@ -61,12 +61,12 @@ class MapField extends Component<MapFieldProps, MapFieldState> {
     if ('properties' in def) {
       defOpts.push(...Object.keys(def.properties).map(field => (
         <Field
-          key={ field }
-          def={ def.properties[field] }
-          optChange={ optChange }
-          name={ field }
-          parent={ this.getParent() }
-          required={ isOptionalJSON(def.required || [], field) }
+          key={field}
+          def={def.properties[field]}
+          optChange={optChange}
+          name={field}
+          parent={this.getParent()}
+          required={isOptionalJSON(def.required || [], field)}
         />
       )));
     }
@@ -77,23 +77,27 @@ class MapField extends Component<MapFieldProps, MapFieldState> {
     }
     const icon = open ? faMinusSquare : faPlusSquare;
     return (
-      <FormGroup tag="fieldset" className="border border-dark p-2">
-        <legend>
-          <Button
-            color={ open ? 'primary' : 'info' }
-            className='float-right p-1'
-            onClick={ () => this.setState(prevState => ({ open: !prevState.open })) }
-          >
-            <FontAwesomeIcon icon={ icon } size="lg" />
-          </Button>
-          { `${required ? '*' : ''}${name}` }
-        </legend>
-        { def.description ? <FormText color="muted">{ def.description }</FormText> : '' }
-        <Collapse isOpen={ open }>
-          <div className="col-12 my-1 px-0">
-            { defOpts }
-          </div>
-        </Collapse>
+      <FormGroup>
+        <Card>
+          <CardHeader>
+            <ButtonGroup className='float-right'>
+              <Button
+                color={open ? 'primary' : 'info'}
+                className='float-right'
+                onClick={() => this.setState(prevState => ({ open: !prevState.open }))}
+              >
+                <FontAwesomeIcon icon={icon} size="lg" />
+              </Button>
+            </ButtonGroup>
+            <CardTitle><h4>{name}{required ? <span style={{color:'red'}}>*</span> : ''}</h4>
+              {def.description ? <FormText color="muted">{def.description}</FormText> : ''}</CardTitle>
+          </CardHeader>
+          <Collapse isOpen={open}>
+            <CardBody className='mx-3'>
+              {defOpts}
+            </CardBody>
+          </Collapse>
+        </Card>
       </FormGroup>
     );
   }

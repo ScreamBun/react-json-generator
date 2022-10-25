@@ -6,7 +6,7 @@ import { EnumeratedDefinition } from './schema';
 interface EnumeratedFieldProps {
   def: EnumeratedDefinition;
   name: string;
-  optChange: (name: string, val: number|string) => void;
+  optChange: (name: string, val: number | string) => void;
   required?: boolean;
   parent?: string;
 }
@@ -51,33 +51,33 @@ const EnumeratedField: FunctionComponent<EnumeratedFieldProps> = props => {
 
   if (def.options) {
     defOpts = def.options.map(opt => (
-      <option key={ opt.value } value={ opt.value } data-subtext={ opt.description }>{ opt.label }</option>
+      <option key={opt.value} value={opt.value} data-subtext={opt.description}>{opt.label}</option>
     ));
   } else if (def.enum) {
     defOpts = def.enum.map(opt => (
-      <option key={ opt } value={ opt } data-subtext={ opt }>{ opt }</option>
+      <option key={opt} value={opt} data-subtext={opt}>{opt}</option>
     ));
   } else if (def.oneOf) {
     defOpts = def.oneOf.map(opt => (
-      <option key={ opt.const } value={ opt.const } data-subtext={ opt.description }>{ opt.const }</option>
+      <option key={opt.const} value={opt.const} data-subtext={opt.description}>{opt.const}</option>
     ));
   } else {
-    defOpts = [<option key={ 0 } value="">Unknown Enumerated format</option>];
+    defOpts = [<option key={0} value="">Unknown Enumerated format</option>];
   }
 
   return (
-    <FormGroup tag="fieldset" className="border border-dark p-2">
-      <legend>{ (required ? '*' : '') + name }</legend>
-      { def.description ? <FormText color="muted">{ def.description }</FormText> : '' }
+    <FormGroup>
+      <h4>{name}{required ? <span style={{color:'red'}}>*</span> : ''}</h4>
+      {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
       <Input
         type="select"
-        name={ name }
-        title={ name }
+        name={name}
+        title={name}
         className="selectpicker"
-        onChange={ e => change(e.target.value) }
+        onChange={e => change(e.target.value)}
       >
-        <option data-subtext={ `${name} options` } value='' >{ `${name} options` }</option>
-        { defOpts }
+        <option data-subtext={`${name} options`} value='' >{`${name} options`}</option>
+        {defOpts}
       </Input>
     </FormGroup>
   );

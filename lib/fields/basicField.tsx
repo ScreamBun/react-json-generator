@@ -14,7 +14,7 @@ const BasicFieldTypes = [
 interface BasicFieldProps {
   def: PrimitivePropertyDefinitions;
   name: string;
-  optChange: (name: string, val: boolean|number|string, ai?: boolean|number) => void;
+  optChange: (name: string, val: boolean | number | string, ai?: boolean | number) => void;
   parent?: string;
   required?: boolean;
   root?: boolean;
@@ -22,9 +22,9 @@ interface BasicFieldProps {
 }
 
 interface InputOptions {
-  type: 'checkbox' | 'number' |'text'
+  type: 'checkbox' | 'number' | 'text'
   placeholder?: string;
-  style?: CSSProperties,
+  style?: CSSProperties;
   onChange: (val: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -74,9 +74,11 @@ const BasicField: FunctionComponent<BasicFieldProps> = props => {
         return {
           type: 'checkbox',
           style: {
-            position: 'inherit',
-            marginLeft: 0
+            display: 'inline',
+            height: '1rem', 
+            width: '1rem'
           },
+
           onChange: e => change(e.target.checked)
         };
       default:
@@ -90,21 +92,21 @@ const BasicField: FunctionComponent<BasicFieldProps> = props => {
   if (BasicFieldTypes.includes(def.type)) { // name is type if not field
     const opts = inputOpts(def.type, def.format);
     return (
-      <FormGroup tag="fieldset" className="border border-dark p-2">
-        <legend>{ `${required ? '*' : ''}${fieldName}` }</legend>
+      <FormGroup>
+        <h4>{fieldName}{required ? <span style={{color:'red'}}>*</span> : ''}</h4>
         <Input
-          { ...opts }
-          name={ name }
+          {...opts}
+          name={name}
         />
-        { def.description ? <FormText color="muted">{ def.description }</FormText> : '' }
+        {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
       </FormGroup>
     );
   }
   return (
-    <div>
-      <p>{ fieldName }</p>
-      <p>Not a basic field</p>
-    </div>
+    <FormGroup>
+      <h4>{fieldName}{required ? <span style={{color:'red'}}>*</span> : ''}</h4>
+      <p style={{ color: 'red' }}>ERROR: Field type is undefined</p>
+    </FormGroup>
   );
 };
 

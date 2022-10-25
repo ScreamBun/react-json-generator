@@ -4,7 +4,7 @@ A React component to assist in creation of message based on a json schema.
 ### Install
 
 ```
-npm install https://github.com/czack425/react-json-generator.git
+npm install https://github.com/ScreamBun/react-json-generator.git
 ```
 
 ### Setup
