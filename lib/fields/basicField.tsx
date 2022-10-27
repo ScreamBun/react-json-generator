@@ -105,7 +105,7 @@ const BasicField: FunctionComponent<BasicFieldProps> = props => {
   return (
     <FormGroup>
       <h4>{fieldName}{required ? <span style={{color:'red'}}>*</span> : ''}</h4>
-      <p style={{ color: 'red' }}>ERROR: Field type is undefined</p>
+      <div style={{ color: 'red' }}>ERROR: Field type is not found</div>
     </FormGroup>
   );
 };

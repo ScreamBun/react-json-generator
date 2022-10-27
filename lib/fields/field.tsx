@@ -75,11 +75,8 @@ class Field extends Component<FieldProps> {
             return <RecordField def={ fieldDef as RecordDefinition } { ...fieldArgs } />;
           default:
             return (
-              <p>
-                <strong>Object</strong>
-                :&nbsp;
-                { name }
-              </p>
+              <div style={{ color: 'red' }}>ERROR: Properties of { name } is not found</div>
+                
             );
         }
       case 'array':

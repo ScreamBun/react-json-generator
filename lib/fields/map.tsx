@@ -65,8 +65,8 @@ class MapField extends Component<MapFieldProps, MapFieldState> {
           def={def.properties[field]}
           optChange={optChange}
           name={field}
-          parent={this.getParent()}
           required={isOptionalJSON(def.required || [], field)}
+          parent={this.getParent()}
         />
       )));
     }
@@ -89,12 +89,12 @@ class MapField extends Component<MapFieldProps, MapFieldState> {
                 <FontAwesomeIcon icon={icon} size="lg" />
               </Button>
             </ButtonGroup>
-            <CardTitle><h4>{name}{required ? <span style={{color:'red'}}>*</span> : ''}</h4>
+            <CardTitle><h4>{name}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
               {def.description ? <FormText color="muted">{def.description}</FormText> : ''}</CardTitle>
           </CardHeader>
           <Collapse isOpen={open}>
             <CardBody className='mx-3'>
-              {defOpts}
+              {defOpts.length == 0 ? <div style={{ color: 'red' }}>ERROR: properties of { name } is not found</div> : defOpts}
             </CardBody>
           </Collapse>
         </Card>
