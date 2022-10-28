@@ -94,7 +94,8 @@ class MapField extends Component<MapFieldProps, MapFieldState> {
           </CardHeader>
           <Collapse isOpen={open}>
             <CardBody className='mx-3'>
-              {defOpts.length == 0 ? <div style={{ color: 'red' }}>ERROR: properties of { name } is not found</div> : defOpts}
+              MAP
+              {defOpts.length == 0 ? <div style={{ color: 'red' }}>ERROR: properties of { name } not found</div> : defOpts}
             </CardBody>
           </Collapse>
         </Card>

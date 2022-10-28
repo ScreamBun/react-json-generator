@@ -45,6 +45,7 @@ export interface ArrayDefinition extends BasePropertyDefinition {
     minItems?: number;
     maxItems?: number;
     uniqueItems?: boolean;
+    prefixItems?: PropertyDefinition | Array<PropertyDefinition>;
     items: PropertyDefinition | Array<PropertyDefinition>;
 }
 

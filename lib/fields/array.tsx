@@ -142,29 +142,33 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
     const { def, name, required } = this.props;
     const { schema } = this.context;
     const { count, max, min } = this.state;
+    var ifTuple = false;
 
     this.desc = def.description || '';
     const fields = [];
 
     for (let i = 0; i < count; ++i) {
-      if (Array.isArray(def.items)) {
-        fields.push(...def.items.map(field => (
+      if (Array.isArray(def.prefixItems)) {
+        ifTuple = true;
+        fields.push(...def.prefixItems.map((field, index) => (
           <Field
-            key={i}
+            key={index}
             def={field}
             optChange={this.optChange}
-            idx={i}
+            idx={index}
             name={'$ref' in field ? field.$ref.replace(/^#\/definitions\//, '') : ''}
             parent={this.parent}
           />
         )));
       } else {
-        let fieldName = 'Field';
+        ifTuple = false;
+        let fieldName = '';
         let ref = {};
 
         if ('$ref' in def.items) {
           fieldName = def.items.$ref.replace(/^#\/definitions\//, '');
           ref = safeGet(schema.definitions || {}, fieldName) || {};
+
         } else if ('type' in def.items) {
           ref = { ...def.items };
         }
@@ -173,8 +177,8 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
             key={i}
             def={ref as PropertyDefinition}
             optChange={this.optChange}
-            name={fieldName}
             idx={i}
+            name={fieldName}
             parent={this.parent}
           />
         );
@@ -185,23 +189,26 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
       <FormGroup>
         <Card>
           <CardHeader>
-            <ButtonGroup className='float-right'>
-              <Button
-                color="danger"
-                className={classNames('float-right', { 'disabled': min })}
-                onClick={this.removeOpt}
-              >
-                <FontAwesomeIcon icon={faMinusSquare} size="lg" />
-              </Button>
-              <Button
-                color="primary"
-                className={classNames('float-right', { 'disabled': max })}
-                onClick={this.addOpt}
-              >
-                <FontAwesomeIcon icon={faPlusSquare} size="lg" />
-              </Button>
-            </ButtonGroup>
-            <CardTitle> <h4 className="inline-block">{name}{required ? <span style={{color:'red'}}>*</span> : ''}</h4>
+            {ifTuple ? '' :
+              <ButtonGroup className='float-right'>
+                <Button
+                  color="danger"
+                  className={classNames('float-right', { 'disabled': min })}
+                  onClick={this.removeOpt}
+                >
+                  <FontAwesomeIcon icon={faMinusSquare} size="lg" />
+                </Button>
+                <Button
+                  color="primary"
+                  className={classNames('float-right', { 'disabled': max })}
+                  onClick={this.addOpt}
+                >
+                  <FontAwesomeIcon icon={faPlusSquare} size="lg" />
+                </Button>
+              </ButtonGroup>
+            }
+
+            <CardTitle> <h4 className="inline-block">{name}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
               {this.desc ? <FormText color="muted">{this.desc}</FormText> : ''}</CardTitle>
 
             {count == this.opts.max ? <div style={{ color: 'red' }}>REQUIREMENT: Maximum of {this.opts.max} </div> : ''}

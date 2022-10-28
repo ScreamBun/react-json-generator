@@ -2,10 +2,10 @@
 import React, { Component } from 'react';
 // eslint-disable-next-line import/no-cycle
 import {
-  ArrayField, BasicField, ChoiceField, EnumeratedField, MapField, RecordField
+  ArrayField, BasicField, ChoiceField, EnumeratedField, RecordField
 } from '.';
 import {
-  ArrayDefinition, ChoiceDefinition, KnownPropertyDefinition, MapDefinition,
+  ArrayDefinition, ChoiceDefinition, KnownPropertyDefinition, 
   PrimitivePropertyDefinitions, PropertyDefinition, RecordDefinition
 } from './schema';
 import { safeGet } from './utils';
@@ -69,13 +69,11 @@ class Field extends Component<FieldProps> {
         switch (true) {
           case (minProps === 1 && maxProps === 1):
             return <ChoiceField def={ fieldDef as ChoiceDefinition } { ...fieldArgs } />;
-          case (minProps >= 1 && maxProps == null):
-            return <MapField def={ fieldDef as MapDefinition } { ...fieldArgs } />;
-          case ('properties' in fieldDef || (minProps == null && maxProps == null)):
+          case ('properties' in fieldDef):
             return <RecordField def={ fieldDef as RecordDefinition } { ...fieldArgs } />;
           default:
             return (
-              <div style={{ color: 'red' }}>ERROR: Properties of { name } is not found</div>
+              <div style={{ color: 'red' }}>ERROR: Properties of { name } not found</div>
                 
             );
         }
