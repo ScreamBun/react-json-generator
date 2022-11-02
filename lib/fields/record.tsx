@@ -15,8 +15,8 @@ interface RecordFieldProps {
   name: string;
   optChange: (name: string, val: any, ai?: boolean | number) => void;
   required?: boolean;
-  root?: boolean;
   parent?: string;
+  root?: boolean;
 }
 
 interface RecordFieldState {
@@ -29,8 +29,8 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
   static defaultProps = {
     name: 'Record',
     required: false,
-    root: false,
-    parent: ''
+    parent: '',
+    root: false
   }
 
   constructor(props: RecordFieldProps) {
@@ -43,6 +43,8 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
 
   getParent() {
     const { name, parent } = this.props;
+
+    console.log(parent + " --- " + name)
 
     let rtn = '';
     if (parent) {
@@ -92,7 +94,6 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
           </CardHeader>
           <Collapse isOpen={open}>
             <CardBody className='mx-3'>
-              REC
               {defOpts.length == 0 ? <div style={{ color: 'red' }}>ERROR: properties of { name } not found</div> : defOpts}
             </CardBody>
           </Collapse>

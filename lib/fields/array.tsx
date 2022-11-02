@@ -36,7 +36,6 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
 
   parent: string;
   desc?: string;
-  msgName: string;
   opts: {
     min: number;
     max: number;
@@ -56,8 +55,6 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
     } else if (name && /^[a-z]/.exec(name)) {
       this.parent = name;
     }
-
-    this.msgName = (parent ? [parent, name] : [name]).join('.');
 
     this.opts = {
       min: def.minItems || 0,
@@ -121,20 +118,25 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
   }
 
   optChange(_k: string, v: any, ai?: boolean | number) {
+    console.log("KEY/VALUE " + _k + " + " + ai + " : " + v )
     if (typeof ai === 'number') {
       this.setState((prevState) => {
         return {
           opts: {
             ...prevState.opts,
-            [ai]: v
+            [_k+[ai]]: v
           }
         };
       }, () => {
         const { optChange } = this.props;
         const { opts } = this.state;
 
+        console.log("PARENT " + this.parent)
+
         optChange(this.parent, [...new Set(objectValues(opts))]);
       });
+    }else{
+      console.log(ai + " : ai is not a number --- check optChange in array.ts" )
     }
   }
 
@@ -152,7 +154,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
         ifTuple = true;
         fields.push(...def.prefixItems.map((field, index) => (
           <Field
-            key={index}
+            key={'$ref' in field ? field.$ref.replace(/^#\/definitions\//, '') : ''}
             def={field}
             optChange={this.optChange}
             idx={index}
@@ -162,26 +164,45 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
         )));
       } else {
         ifTuple = false;
-        let fieldName = '';
-        let ref = {};
 
-        if ('$ref' in def.items) {
-          fieldName = def.items.$ref.replace(/^#\/definitions\//, '');
-          ref = safeGet(schema.definitions || {}, fieldName) || {};
+        if (Array.isArray(def.items)) {
+          ifTuple = true;
+          fields.push(...def.items.map((field, index) => (
+            <Field
+              key={'$ref' in field ? field.$ref.replace(/^#\/definitions\//, '') : ''}
+              def={field}
+              optChange={this.optChange}
+              idx={index}
+              name={'$ref' in field ? field.$ref.replace(/^#\/definitions\//, '') : ''}
+              parent={this.parent}
+            />
+          )));
+        } else {
+          let fieldName = '';
+          let ref = {};
 
-        } else if ('type' in def.items) {
-          ref = { ...def.items };
+          if ('$ref' in def.items) {
+            fieldName = def.items.$ref.replace(/^#\/definitions\//, '');
+            ref = safeGet(schema.definitions || {}, fieldName) || {};
+
+          } else if ('type' in def.items) {
+            fieldName = def.title ? def.title : '';
+            ref = { ...def.items };
+          }
+
+          console.log(ref as PropertyDefinition)
+
+          fields.push(
+            <Field
+              key={fieldName + [i]}
+              def={ref as PropertyDefinition}
+              optChange={this.optChange}
+              idx={i}
+              name={fieldName + [i]}
+              parent={this.parent}
+            />
+          );
         }
-        fields.push(
-          <Field
-            key={i}
-            def={ref as PropertyDefinition}
-            optChange={this.optChange}
-            idx={i}
-            name={fieldName}
-            parent={this.parent}
-          />
-        );
       }
     }
 
