@@ -41,7 +41,7 @@ const BasicField: FunctionComponent<BasicFieldProps> = props => {
     def, name, optChange, parent, required
   } = { ...DefaultProps, ...props };
 
-  const fieldName = name || def.title || 'Basic Field';
+  const fieldName = name || def.title || '';
   const msgName = (parent ? [parent, fieldName] : [fieldName]).join('.');
 
   const change = (val: boolean | string) => {

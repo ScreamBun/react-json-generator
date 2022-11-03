@@ -56,7 +56,7 @@ class Field extends Component<FieldProps> {
       optChange: (k: string, v: any) => optChange(k, v, idx),
       root,
       parent,
-      name: name || fieldDef.title || 'Field',
+      name: name || fieldDef.title || '',
       required
     };
 

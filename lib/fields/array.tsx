@@ -49,11 +49,12 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
 
     const { def, name, parent } = this.props;
 
-    this.parent = name || '';
     if (parent) {
       this.parent = [parent, name].join('.');
     } else if (name && /^[a-z]/.exec(name)) {
       this.parent = name;
+    } else {
+      this.parent = '';
     }
 
     this.opts = {
@@ -118,25 +119,24 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
   }
 
   optChange(_k: string, v: any, ai?: boolean | number) {
-    console.log("KEY/VALUE " + _k + " + " + ai + " : " + v )
     if (typeof ai === 'number') {
+
       this.setState((prevState) => {
         return {
           opts: {
             ...prevState.opts,
-            [_k+[ai]]: v
+            [ai]: v
           }
         };
       }, () => {
         const { optChange } = this.props;
         const { opts } = this.state;
 
-        console.log("PARENT " + this.parent)
-
         optChange(this.parent, [...new Set(objectValues(opts))]);
+
       });
-    }else{
-      console.log(ai + " : ai is not a number --- check optChange in array.ts" )
+    } else {
+      console.log(ai + " : ai is not a number --- check optChange in array.ts")
     }
   }
 
@@ -190,15 +190,13 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
             ref = { ...def.items };
           }
 
-          console.log(ref as PropertyDefinition)
-
           fields.push(
             <Field
-              key={fieldName + [i]}
+              key={fieldName}
               def={ref as PropertyDefinition}
               optChange={this.optChange}
               idx={i}
-              name={fieldName + [i]}
+              name={fieldName}
               parent={this.parent}
             />
           );

@@ -21,6 +21,7 @@ interface RecordFieldProps {
 
 interface RecordFieldState {
   open: boolean;
+  opts: Record<number, any>;
 }
 
 // Component
@@ -33,31 +34,48 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
     root: false
   }
 
+  parent: string;
+
   constructor(props: RecordFieldProps) {
     super(props);
+    this.optChange = this.optChange.bind(this);
+
+    const { name, parent } = this.props;
+    if (parent) {
+      this.parent = [parent, name].join('.');
+    } else if (name && /^[a-z]/.exec(name)) {
+      this.parent = name;
+    } else {
+      this.parent = '';
+    }
 
     this.state = {
-      open: false
+      open: false,
+      opts: {}
     };
   }
 
-  getParent() {
-    const { name, parent } = this.props;
+  optChange(_k: string, v: any) {
+    console.log("RECORD : PARENT --- " + this.parent + " ---- KEY :" + _k + " --- VALUE: " + v)
 
-    console.log(parent + " --- " + name)
+    this.setState((prevState) => {
+      return {
+        opts: {
+          ...prevState.opts,
+          [_k]: v
+        }
+      };
+    }, () => {
+      const { optChange } = this.props;
+      const { opts } = this.state;
 
-    let rtn = '';
-    if (parent) {
-      rtn = [parent, name].join('.');
-    } else if (name && /^[a-z]/.exec(name)) {
-      rtn = name;
-    }
-    return rtn;
+      optChange(this.parent, { ...new Object(opts) });
+    });
   }
 
   render() {
     const {
-      def, name, optChange, required, root
+      def, name, required, root
     } = this.props;
     const { open } = this.state;
 
@@ -65,10 +83,10 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
       <Field
         key={field}
         def={def.properties[field]}
-        optChange={optChange}
+        optChange={this.optChange}
         name={field}
         required={isOptionalJSON(def.required || [], field)}
-        parent={this.getParent()}
+        parent={this.parent}
       />
     ));
 
@@ -94,7 +112,7 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
           </CardHeader>
           <Collapse isOpen={open}>
             <CardBody className='mx-3'>
-              {defOpts.length == 0 ? <div style={{ color: 'red' }}>ERROR: properties of { name } not found</div> : defOpts}
+              {defOpts.length == 0 ? <div style={{ color: 'red' }}>ERROR: properties of {name} not found</div> : defOpts}
             </CardBody>
           </Collapse>
         </Card>
