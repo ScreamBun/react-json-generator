@@ -75,7 +75,7 @@ const BasicField: FunctionComponent<BasicFieldProps> = props => {
           type: 'checkbox',
           style: {
             display: 'inline',
-            height: '1rem', 
+            height: '1rem',
             width: '1rem'
           },
 
@@ -93,7 +93,7 @@ const BasicField: FunctionComponent<BasicFieldProps> = props => {
     const opts = inputOpts(def.type, def.format);
     return (
       <FormGroup>
-        <h4>{fieldName}{required ? <span style={{color:'red'}}>*</span> : ''}</h4>
+        <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
         <Input
           {...opts}
           name={name}
@@ -104,7 +104,7 @@ const BasicField: FunctionComponent<BasicFieldProps> = props => {
   }
   return (
     <FormGroup>
-      <h4>{fieldName}{required ? <span style={{color:'red'}}>*</span> : ''}</h4>
+      <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
       <div style={{ color: 'red' }}>ERROR: Field type not found</div>
     </FormGroup>
   );

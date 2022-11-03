@@ -56,21 +56,32 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
   }
 
   optChange(_k: string, v: any) {
-    console.log("RECORD : PARENT --- " + this.parent + " ---- KEY :" + _k + " --- VALUE: " + v)
+    if (this.parent) {
+      this.setState((prevState) => {
+        return {
+          opts: {
+            ...prevState.opts,
+            [_k]: v
+          }
+        };
+      }, () => {
+        const { optChange } = this.props;
+        const { opts } = this.state;
 
-    this.setState((prevState) => {
-      return {
-        opts: {
-          ...prevState.opts,
+        optChange(this.parent, { ...opts });
+      });
+    } else {
+      this.setState((prevState) => {
+        return {
+          ...prevState,
           [_k]: v
-        }
-      };
-    }, () => {
-      const { optChange } = this.props;
-      const { opts } = this.state;
+        };
+      }, () => {
+        const { optChange } = this.props;
 
-      optChange(this.parent, { ...new Object(opts) });
-    });
+        optChange(_k, v);
+      });
+    }
   }
 
   render() {
@@ -85,8 +96,8 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
         def={def.properties[field]}
         optChange={this.optChange}
         name={field}
-        required={isOptionalJSON(def.required || [], field)}
         parent={this.parent}
+        required={isOptionalJSON(def.required || [], field)}
       />
     ));
 

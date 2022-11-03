@@ -55,6 +55,8 @@ class ChoiceField extends Component<ChoiceFieldProps, ChoiceFieldState> {
 
       if (selected === '') {
         optChange(def.type, undefined);
+      } else {
+        optChange(this.getParent(), selected);
       }
     });
   }
@@ -82,6 +84,7 @@ class ChoiceField extends Component<ChoiceFieldProps, ChoiceFieldState> {
     if (selected) {
       selectedDef = (
         <Field
+          key={selected}
           def={def.properties[selected] || {}}
           optChange={optChange}
           name={selected}
@@ -90,10 +93,10 @@ class ChoiceField extends Component<ChoiceFieldProps, ChoiceFieldState> {
         />
       );
     }
-
+    
     return (
       <FormGroup>
-        <h4>{name}{required ? <span style={{color:'red'}}>*</span> : ''}</h4>
+        <h4>{name}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
         {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
         <div className="col-12 my-1 px-0">
           <Input type="select" name={name} title={name} className="selectpicker" onChange={this.handleChange} default={-1}>

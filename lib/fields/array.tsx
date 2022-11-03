@@ -84,7 +84,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
       const { name, optChange } = this.props;
       const { max, opts } = this.state;
 
-      optChange(this.parent, Array.from(new Set(objectValues(opts))));
+      optChange(this.parent, Array.from(objectValues(opts)));
       if (max) {
         console.error(`Cannot have more than ${this.opts.max} items for ${name}`);
       }
@@ -98,8 +98,9 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
       const { min } = this.opts;
       const { count, opts } = prevState;
       const minBool = count > min;
+
       if (minBool) {
-        delete opts[Math.max(...Object.keys(opts).map(k => parseInt(k, 10)))];
+        delete opts[count - 1]
       }
 
       return {
@@ -111,7 +112,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
       const { name, optChange } = this.props;
       const { min, opts } = this.state;
 
-      optChange(this.parent, Array.from(new Set(objectValues(opts))));
+      optChange(this.parent, Array.from(objectValues(opts)));
       if (min) {
         console.error(`Cannot have less than ${this.opts.min} items for ${name}`);
       }
@@ -120,7 +121,6 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
 
   optChange(_k: string, v: any, ai?: boolean | number) {
     if (typeof ai === 'number') {
-
       this.setState((prevState) => {
         return {
           opts: {
@@ -132,9 +132,10 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
         const { optChange } = this.props;
         const { opts } = this.state;
 
-        optChange(this.parent, [...new Set(objectValues(opts))]);
+        optChange(this.parent, [...objectValues(opts)]);
 
       });
+
     } else {
       console.log(ai + " : ai is not a number --- check optChange in array.ts")
     }
@@ -144,6 +145,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
     const { def, name, required } = this.props;
     const { schema } = this.context;
     const { count, max, min } = this.state;
+
     var ifTuple = false;
 
     this.desc = def.description || '';
@@ -162,6 +164,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
             parent={this.parent}
           />
         )));
+
       } else {
         ifTuple = false;
 
@@ -177,6 +180,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
               parent={this.parent}
             />
           )));
+
         } else {
           let fieldName = '';
           let ref = {};

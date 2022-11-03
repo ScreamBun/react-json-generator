@@ -51,7 +51,7 @@ const EnumeratedField: FunctionComponent<EnumeratedFieldProps> = props => {
 
   if (def.options) {
     defOpts = def.options.map(opt => (
-      <option key={opt.value} value={opt.value} data-subtext={opt.description}>{opt.label}</option>
+      <option key={opt.value} value={opt.value} data-subtext={opt.description}>{opt.value}</option>
     ));
   } else if (def.enum) {
     defOpts = def.enum.map(opt => (
