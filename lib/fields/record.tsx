@@ -104,6 +104,12 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
     if (root) {
       return defOpts;
     }
+
+    if (def.patternProperties) {
+      // TODO: Pattern Properties
+      console.warn('Map Pattern Props', def.patternProperties);
+    }
+    
     const icon = open ? faMinusSquare : faPlusSquare;
     return (
       <FormGroup>

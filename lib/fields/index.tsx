@@ -4,7 +4,6 @@ import ArrayField from './array';
 import BasicField from './basicField';
 import ChoiceField from './choice';
 import EnumeratedField from './enumerated';
-import MapField from './map';
 import RecordField from './record';
 import { JSONSchema } from './schema';
 
@@ -15,7 +14,6 @@ export {
   BasicField,
   ChoiceField,
   EnumeratedField,
-  MapField,
   RecordField,
   // Interfaces
   JSONSchema

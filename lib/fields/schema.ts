@@ -66,12 +66,13 @@ export interface EnumeratedDefinition {
     enum?: Array<string|number>;
 }
 
-// Map
-export interface MapDefinition  extends BasePropertyDefinition {
+// Object
+export interface RecordDefinition  extends BasePropertyDefinition {
     type: 'object';
     required?: Array<string>;
     minProperties?: number;
     maxProperties?: number;
+    additionalProperties: false;
     properties: {
         [prop: string]: PropertyDefinition;
     }
@@ -81,23 +82,17 @@ export interface MapDefinition  extends BasePropertyDefinition {
 }
 
 // Choice
-export interface ChoiceDefinition extends MapDefinition {
+export interface ChoiceDefinition extends RecordDefinition {
     minProperties: 1;
     maxProperties: 1;
     additionalProperties: false;
-}
-
-// Record
-export interface RecordDefinition extends MapDefinition {
-    additionalProperties: false;
-    patternProperties: never;
 }
 
 // Schema
 // Property Definitions
 export type PrimitivePropertyDefinitions = BooleanDefinition | StringProperty | NumericProperty;
 export type KnownPropertyDefinition = (
-    PrimitivePropertyDefinitions | ArrayDefinition | EnumeratedDefinition | MapDefinition |
+    PrimitivePropertyDefinitions | ArrayDefinition | EnumeratedDefinition | 
     RecordDefinition | BasePropertyDefinition
 );
 export type PropertyDefinition = KnownPropertyDefinition | PropertyReference;
