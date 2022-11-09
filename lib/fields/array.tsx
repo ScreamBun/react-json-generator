@@ -68,9 +68,6 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
       count: 1,
       opts: {}
     };
-    
-    console.log(def.uniqueItems)
-
   }
 
   checkUniqueArr() {
@@ -171,12 +168,12 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
   render() {
     const { def, name, required } = this.props;
     const { schema } = this.context;
-    const { count, max, min} = this.state;
+    const { count, max, min } = this.state;
 
     var ifTuple = false;
     var ifDupe = false;
 
-    if(def.uniqueItems){
+    if (def.uniqueItems) {
       ifDupe = this.checkUniqueArr();
     }
 
