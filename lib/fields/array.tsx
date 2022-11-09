@@ -9,7 +9,6 @@ import Field from './field';
 import { ArrayDefinition, PropertyDefinition } from './schema';
 import { objectValues, safeGet } from './utils';
 import { GeneratorContext } from '../context';
-import uniqueItems from 'ajv/dist/vocabularies/validation/uniqueItems';
 
 // Interfaces
 interface ArrayFieldProps {
@@ -23,7 +22,6 @@ interface ArrayFieldProps {
 interface ArrayFieldState {
   min: boolean;
   max: boolean;
-  dupe: boolean;
   count: number;
   opts: Record<number, any>;
 }
@@ -33,7 +31,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
   static contextType = GeneratorContext;
   static defaultProps = {
     name: 'Array',
-    parent: ''
+    parent: '',
   }
 
   parent: string;
@@ -67,10 +65,12 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
     this.state = {
       min: false,
       max: false,
-      dupe: false,
       count: 1,
       opts: {}
     };
+    
+    console.log(def.uniqueItems)
+
   }
 
   checkUniqueArr() {
@@ -82,8 +82,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
       const uniqueObjSet = Array.from(new Set(outputSet.map(a => JSON.stringify(a))))
       if (outputSet.length != uniqueObjSet.length) {
         console.error("ERROR: Objects are not unique");
-        this.setState({ dupe: true });
-        return;
+        return true;
       }
 
       //array of elements
@@ -91,40 +90,14 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
       const uniqueSet = Array.from(new Set(objectValues(opts)))
       if (outputSet.length != uniqueSet.length) {
         console.error("ERROR: Elements are not unique");
-        this.setState({ dupe: true });
-        return;
+        return true;
       }
     }
-    this.setState({ dupe: false });
+    return false;
   }
 
   addOpt(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
-
-    if (uniqueItems) {
-      const { opts } = this.state;
-
-      const outputSet = Array.from(objectValues(opts));
-      //array of object
-      if (outputSet[0] instanceof Object) {
-        const uniqueObjSet = Array.from(new Set(outputSet.map(a => JSON.stringify(a))))
-        if (outputSet.length != uniqueObjSet.length) {
-          console.error("ERROR: Objects are not unique");
-          this.setState({ dupe: true });
-          return;
-        }
-
-        //array of elements
-      } else {
-        const uniqueSet = Array.from(new Set(objectValues(opts)))
-        if (outputSet.length != uniqueSet.length) {
-          console.error("ERROR: Elements are not unique");
-          this.setState({ dupe: true });
-          return;
-        }
-      }
-      this.setState({ dupe: false });
-    }
 
     this.setState(prevState => {
       const { max } = this.opts;
@@ -167,10 +140,6 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
 
       optChange(this.parent, Array.from(objectValues(opts)));
 
-      if (uniqueItems) {
-        this.checkUniqueArr();
-      }
-
       if (min) {
         console.error(`Cannot have less than ${this.opts.min} items for ${name}`);
       }
@@ -192,9 +161,6 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
 
         optChange(this.parent, [...objectValues(opts)]);
 
-        if (uniqueItems) {
-          this.checkUniqueArr();
-        }
       });
 
     } else {
@@ -205,9 +171,14 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
   render() {
     const { def, name, required } = this.props;
     const { schema } = this.context;
-    const { count, max, min, dupe } = this.state;
+    const { count, max, min} = this.state;
 
     var ifTuple = false;
+    var ifDupe = false;
+
+    if(def.uniqueItems){
+      ifDupe = this.checkUniqueArr();
+    }
 
     this.desc = def.description || '';
     const fields = [];
@@ -297,7 +268,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
 
             {count == this.opts.max ? <div style={{ color: 'red' }}>REQUIREMENT: Maximum of {this.opts.max} </div> : ''}
             {count == this.opts.min ? <div style={{ color: 'red' }}>REQUIREMENT: Minimum of {this.opts.min} </div> : ''}
-            {dupe ? <div style={{ color: 'red' }}>REQUIREMENT: Elements must be unique </div> : ''}
+            {ifDupe ? <div style={{ color: 'red' }}>REQUIREMENT: Elements must be unique </div> : ''}
 
           </CardHeader>
           <CardBody className='mx-3'>
