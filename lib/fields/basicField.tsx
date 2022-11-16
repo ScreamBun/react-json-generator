@@ -1,6 +1,7 @@
-import React, { CSSProperties, FunctionComponent } from 'react';
-import { FormGroup, FormText, Input } from 'reactstrap';
+import React, { Component } from 'react';
+import { Button, Col, FormGroup, FormText, Input, Row } from 'reactstrap';
 import { PrimitivePropertyDefinitions } from './schema';
+import { v4 as uuid4 } from 'uuid';
 
 // Const Vars
 const BasicFieldTypes = [
@@ -21,93 +22,161 @@ interface BasicFieldProps {
   arr?: boolean;
 }
 
-interface InputOptions {
-  type: 'checkbox' | 'number' | 'text'
-  placeholder?: string;
-  style?: CSSProperties;
-  onChange: (val: React.ChangeEvent<HTMLInputElement>) => void;
+interface BasicFieldState {
+  value: any;
 }
 
 // Component
-const DefaultProps = {
-  name: 'BasicField',
-  arr: false,
-  required: false,
-  parent: ''
-};
-
-const BasicField: FunctionComponent<BasicFieldProps> = props => {
-  const {
-    def, name, optChange, parent, required
-  } = { ...DefaultProps, ...props };
-
-  const fieldName = name || def.title || '';
-  const msgName = (parent ? [parent, fieldName] : [fieldName]).join('.');
-
-  const change = (val: boolean | string) => {
-    const { arr } = props;
-    let v: boolean | number | string = val;
-    switch (def.type) {
-      case 'integer':
-        v = parseInt(val as string, 10) || val;
-        break;
-      case 'number':
-        v = parseFloat((val as string).replace(',', '.')) || val;
-        break;
-      // no default
-    }
-    optChange(msgName, v, arr);
+class BasicField extends Component<BasicFieldProps, BasicFieldState> {
+  static defaultProps = {
+    name: 'BasicField',
+    arr: false,
+    required: false,
+    parent: ''
   };
 
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-  const inputOpts = (type: string, _format?: string): InputOptions => {
-    // TODO: use the JSON format??
-    switch (type) {
-      case 'number':
-      case 'integer':
-        return {
-          type: 'number',
-          placeholder: '0',
-          onChange: e => change(e.target.value)
-        };
-      case 'boolean':
-        return {
-          type: 'checkbox',
-          style: {
-            display: 'inline',
-            height: '1rem',
-            width: '1rem'
-          },
+  constructor(props: BasicFieldProps) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
 
-          onChange: e => change(e.target.checked)
-        };
-      default:
-        return {
-          type: 'text',
-          onChange: e => change(e.target.value)
-        };
+    this.state = { value: '' }
+  }
+  getParent() {
+    const { name, parent } = this.props;
+
+    let rtn = '';
+    if (parent) {
+      rtn = [parent, name].join('.');
+    } else if (name && /^[a-z]/.exec(name)) {
+      rtn = name;
     }
-  };
+    return rtn;
+  }
 
-  if (BasicFieldTypes.includes(def.type)) { // name is type if not field
-    const opts = inputOpts(def.type, def.format);
+  handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { arr } = this.props;
+
+    this.setState({
+      value: e.target.value
+    }, () => {
+      const { def, optChange } = this.props;
+      const { value } = this.state;
+
+      let v: boolean | number | string = value;
+
+      switch (def.type) {
+        case 'integer':
+          v = parseInt(value as string, 10) || value;
+          break;
+        case 'number':
+          v = parseFloat((value as string).replace(',', '.')) || value;
+          break;
+        default:
+          v = value;
+      }
+
+      optChange(this.getParent(), v, arr);
+    });
+  }
+
+
+  makeID = () => {
+    const { arr, optChange } = this.props;
+
+    const randomID = uuid4();
+    this.setState({ value: randomID });
+    optChange(this.getParent(), randomID, arr);
+  }
+
+  render() {
+    const {
+      def, name, required
+    } = this.props;
+
+    const { value } = this.state;
+
+    const fieldName = name || def.title || '';
+
+    if (BasicFieldTypes.includes(def.type)) { // name is type if not field
+      switch (def.type) {
+        case 'number':
+        case 'integer':
+          return (
+            <FormGroup>
+              <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
+              <Input
+                type='number'
+                placeholder='0'
+                name={name}
+                parent={this.getParent()}
+                onChange={this.handleChange}
+                value={value}
+              />
+              {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
+            </FormGroup>
+          );
+        case 'boolean':
+          return (
+            <FormGroup>
+              <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
+              <Input
+                type='checkbox'
+                name={name}
+                parent={this.getParent()}
+                onChange={this.handleChange}
+                value={value}
+              />
+              {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
+            </FormGroup>
+          );
+        default:
+          if (name == "command_id") {
+            return (
+              <Row className="align-items-center">
+                <Col className='col-9'>
+                  <FormGroup>
+                    <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
+                    <Input
+                      type='text'
+                      name={name}
+                      parent={this.getParent()}
+                      onChange={this.handleChange}
+                      value={value}
+                    />
+                    {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
+                  </FormGroup>
+                </Col>
+                <Col className='col-3'>
+                  <Button color='primary' onClick={this.makeID}>Generate ID</Button>
+                </Col>
+              </Row>
+            )
+
+
+          } else {
+            return (
+              <FormGroup>
+                <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
+                <Input
+                  type="text"
+                  name={name}
+                  parent={this.getParent()}
+                  onChange={this.handleChange}
+                  value={value}
+                />
+                {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
+              </FormGroup>
+            );
+          }
+      }
+    }
     return (
       <FormGroup>
         <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
-        <Input
-          {...opts}
-          name={name}
-        />
-        {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
+        <div style={{ color: 'red' }}>ERROR: Field type not found</div>
       </FormGroup>
     );
-  }
-  return (
-    <FormGroup>
-      <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
-      <div style={{ color: 'red' }}>ERROR: Field type not found</div>
-    </FormGroup>
-  );
-};
-
+  };
+}
 export default BasicField;
+
