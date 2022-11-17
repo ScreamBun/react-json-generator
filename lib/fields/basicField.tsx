@@ -19,7 +19,7 @@ const BasicFieldTypes = [
 interface BasicFieldProps {
   def: PrimitivePropertyDefinitions;
   name: string;
-  optChange: (name: string, val: boolean | number | string, ai?: boolean | number) => void;
+  optChange: (name: string, val: boolean | number | string | undefined, ai?: boolean | number) => void;
   parent?: string;
   required?: boolean;
   root?: boolean;
@@ -67,7 +67,7 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
       const { def, optChange } = this.props;
       const { value } = this.state;
 
-      let v: boolean | number | string = value;
+      let v: boolean | number | string | undefined = value;
 
       switch (def.type) {
         case 'integer':
@@ -78,6 +78,9 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
           break;
         default:
           v = value;
+      }
+      if (v == '') {
+        v = undefined;
       }
 
       optChange(this.getParent(), v, arr);
@@ -106,6 +109,10 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
       }
     } else {
       value = moment(time).valueOf();
+    }
+
+    if (value == '') {
+      value = undefined;
     }
 
     optChange(this.getParent(), value, arr);

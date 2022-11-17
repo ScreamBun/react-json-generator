@@ -34,7 +34,6 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
     parent: '',
   }
 
-  parent: string;
   desc?: string;
   opts: {
     min: number;
@@ -47,15 +46,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
     this.optChange = this.optChange.bind(this);
     this.removeOpt = this.removeOpt.bind(this);
 
-    const { def, name, parent } = this.props;
-
-    if (parent) {
-      this.parent = [parent, name].join('.');
-    } else if (name && /^[a-z]/.exec(name)) {
-      this.parent = name;
-    } else {
-      this.parent = '';
-    }
+    const { def } = this.props;
 
     this.opts = {
       min: def.minItems || 0,
@@ -68,6 +59,18 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
       count: 1,
       opts: {}
     };
+  }
+
+  getParent() {
+    const { name, parent } = this.props;
+
+    let rtn = '';
+    if (parent) {
+      rtn = [parent, name].join('.');
+    } else if (name && /^[a-z]/.exec(name)) {
+      rtn = name;
+    }
+    return rtn;
   }
 
   checkUniqueArr() {
@@ -107,7 +110,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
       const { name, optChange } = this.props;
       const { max, opts } = this.state;
 
-      optChange(this.parent, Array.from(objectValues(opts)));
+      optChange(this.getParent(), Array.from(objectValues(opts)));
       if (max) {
         console.error(`Cannot have more than ${this.opts.max} items for ${name}`);
       }
@@ -135,7 +138,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
       const { name, optChange } = this.props;
       const { min, opts } = this.state;
 
-      optChange(this.parent, Array.from(objectValues(opts)));
+      optChange(this.getParent(), Array.from(objectValues(opts)));
 
       if (min) {
         console.error(`Cannot have less than ${this.opts.min} items for ${name}`);
@@ -156,8 +159,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
         const { optChange } = this.props;
         const { opts } = this.state;
 
-        optChange(this.parent, [...objectValues(opts)]);
-
+        optChange(this.getParent(), [...objectValues(opts)]);
       });
 
     } else {
@@ -190,7 +192,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
             optChange={this.optChange}
             idx={index}
             name={'$ref' in field ? field.$ref.replace(/^#\/definitions\//, '') : ''}
-            parent={this.parent}
+            parent={this.getParent()}
           />
         )));
 
@@ -206,7 +208,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
               optChange={this.optChange}
               idx={index}
               name={'$ref' in field ? field.$ref.replace(/^#\/definitions\//, '') : ''}
-              parent={this.parent}
+              parent={this.getParent()}
             />
           )));
 
@@ -230,7 +232,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
               optChange={this.optChange}
               idx={i}
               name={fieldName}
-              parent={this.parent}
+              parent={this.getParent()}
             />
           );
         }

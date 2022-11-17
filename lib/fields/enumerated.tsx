@@ -6,7 +6,7 @@ import { EnumeratedDefinition } from './schema';
 interface EnumeratedFieldProps {
   def: EnumeratedDefinition;
   name: string;
-  optChange: (name: string, val: number | string) => void;
+  optChange: (name: string, val: number | string | undefined) => void;
   required?: boolean;
   parent?: string;
 }
@@ -34,7 +34,7 @@ const EnumeratedField: FunctionComponent<EnumeratedFieldProps> = props => {
   };
 
   const change = (val: string) => {
-    let v: number | string = val;
+    let v: number | string | undefined = val;
     switch (def.type) {
       case 'integer':
         v = parseInt(val, 10) || val;
@@ -42,7 +42,9 @@ const EnumeratedField: FunctionComponent<EnumeratedFieldProps> = props => {
       case 'number':
         v = parseFloat(val.replace(',', '.')) || val;
         break;
-      // no default
+    }
+    if (val == '') {
+      v = undefined;
     }
     optChange(getParent(), v);
   };
@@ -67,7 +69,7 @@ const EnumeratedField: FunctionComponent<EnumeratedFieldProps> = props => {
 
   return (
     <FormGroup>
-      <h4>{name}{required ? <span style={{color:'red'}}>*</span> : ''}</h4>
+      <h4>{name}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
       {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
       <Input
         type="select"

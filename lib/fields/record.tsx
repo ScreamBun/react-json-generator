@@ -34,20 +34,9 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
     root: false
   }
 
-  parent: string;
-
   constructor(props: RecordFieldProps) {
     super(props);
     this.optChange = this.optChange.bind(this);
-
-    const { name, parent } = this.props;
-    if (parent) {
-      this.parent = [parent, name].join('.');
-    } else if (name && /^[a-z]/.exec(name)) {
-      this.parent = name;
-    } else {
-      this.parent = '';
-    }
 
     this.state = {
       open: false,
@@ -55,8 +44,20 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
     };
   }
 
+  getParent() {
+    const { name, parent } = this.props;
+
+    let rtn = '';
+    if (parent) {
+      rtn = [parent, name].join('.');
+    } else if (name && /^[a-z]/.exec(name)) {
+      rtn = name;
+    }
+    return rtn;
+  }
+
   optChange(_k: string, v: any) {
-    if (this.parent) {
+    if (this.getParent()) {
       this.setState((prevState) => {
         return {
           opts: {
@@ -68,7 +69,7 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
         const { optChange } = this.props;
         const { opts } = this.state;
 
-        optChange(this.parent, { ...opts });
+        optChange(this.getParent(), { ...opts });
       });
     } else {
       this.setState((prevState) => {
@@ -78,7 +79,6 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
         };
       }, () => {
         const { optChange } = this.props;
-
         optChange(_k, v);
       });
     }
@@ -96,7 +96,7 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
         def={def.properties[field]}
         optChange={this.optChange}
         name={field}
-        parent={this.parent}
+        parent={this.getParent()}
         required={isOptionalJSON(def.required || [], field)}
       />
     ));
@@ -109,7 +109,7 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
       // TODO: Pattern Properties
       console.warn('Map Pattern Props', def.patternProperties);
     }
-    
+
     const icon = open ? faMinusSquare : faPlusSquare;
     return (
       <FormGroup>

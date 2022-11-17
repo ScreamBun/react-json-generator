@@ -50,14 +50,10 @@ class ChoiceField extends Component<ChoiceFieldProps, ChoiceFieldState> {
     this.setState({
       selected: e.target.value
     }, () => {
-      const { def, optChange } = this.props;
+      const { optChange } = this.props;
       const { selected } = this.state;
 
-      if (selected === '') {
-        optChange(def.type, undefined);
-      } else {
-        optChange(this.getParent(), selected);
-      }
+      optChange(this.getParent(), selected);
     });
   }
 
@@ -93,14 +89,14 @@ class ChoiceField extends Component<ChoiceFieldProps, ChoiceFieldState> {
         />
       );
     }
-    
+
     return (
       <FormGroup>
         <h4>{name}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
         {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
         <div className="col-12 my-1 px-0">
-          <Input type="select" name={name} title={name} className="selectpicker" onChange={this.handleChange} default={-1}>
-            <option data-subtext={`${name} options`} value="" >{`${name} options`}</option>
+          <Input type="select" name={name} title={name} className="selectpicker" onChange={this.handleChange}>
+            <option data-subtext={`${name} options`} value='' >{`${name} options`}</option>
             {defOpts}
           </Input>
 
