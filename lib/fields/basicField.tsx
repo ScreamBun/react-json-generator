@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { Button, Col, FormGroup, FormText, Input, Row } from 'reactstrap';
 import { PrimitivePropertyDefinitions } from './schema';
 import { v4 as uuid4 } from 'uuid';
+import Datetime from "react-datetime";
+import { Moment } from 'moment';
+import moment from 'moment';
+import "react-datetime/css/react-datetime.css";
 
 // Const Vars
 const BasicFieldTypes = [
@@ -41,6 +45,7 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
 
     this.state = { value: '' }
   }
+
   getParent() {
     const { name, parent } = this.props;
 
@@ -79,13 +84,31 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
     });
   }
 
-
-  makeID = () => {
+  setID = () => {
     const { arr, optChange } = this.props;
 
     const randomID = uuid4();
     this.setState({ value: randomID });
     optChange(this.getParent(), randomID, arr);
+  }
+
+  setTime(time: string | Moment) {
+    const { arr, optChange } = this.props;
+
+    //translate value to milliseconds
+    let value;
+    if (typeof time == "string") {
+      //validation: numeric input only
+      if (moment(time).isValid()) {
+        value = moment(time).valueOf();
+      } else {
+        value = time.replace(/\D/g, '');
+      }
+    } else {
+      value = moment(time).valueOf();
+    }
+
+    optChange(this.getParent(), value, arr);
   }
 
   render() {
@@ -101,20 +124,44 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
       switch (def.type) {
         case 'number':
         case 'integer':
-          return (
-            <FormGroup>
-              <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
-              <Input
-                type='number'
-                placeholder='0'
-                name={name}
-                parent={this.getParent()}
-                onChange={this.handleChange}
-                value={value}
-              />
-              {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
-            </FormGroup>
-          );
+          if (def.title && def.title.includes("Date Time")) {
+            //anytime before today is not valid
+            var valid = function (current: { isAfter: (arg0: Moment) => any; }) {
+              return current.isAfter(moment().subtract(1, 'day'));
+            };
+
+            return (
+              <FormGroup>
+                <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
+                <Datetime
+                  isValidDate={valid}
+                  inputProps={{ placeholder: 'MM/DD/YYYY HH:mm:ss' }}
+                  onChange={(value) => this.setTime(value)}
+                  dateFormat='MM/DD/YYYY'
+                  timeFormat='HH:mm:ss'
+                />
+                {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
+              </FormGroup>
+            );
+
+          } else {
+            return (
+              <FormGroup>
+                <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
+                <Input
+                  type='number'
+                  placeholder='0'
+                  min='0'
+                  name={name}
+                  parent={this.getParent()}
+                  onChange={this.handleChange}
+                  value={value}
+                />
+                {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
+              </FormGroup>
+            );
+          }
+
         case 'boolean':
           return (
             <FormGroup>
@@ -129,6 +176,7 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
               {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
             </FormGroup>
           );
+
         default:
           if (name == "command_id") {
             return (
@@ -147,11 +195,10 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
                   </FormGroup>
                 </Col>
                 <Col className='col-3'>
-                  <Button color='primary' onClick={this.makeID}>Generate ID</Button>
+                  <Button color='primary' onClick={this.setID}>Generate ID</Button>
                 </Col>
               </Row>
             )
-
 
           } else {
             return (
@@ -178,5 +225,6 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
     );
   };
 }
+
 export default BasicField;
 
