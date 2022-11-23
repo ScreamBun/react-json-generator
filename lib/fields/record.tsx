@@ -72,7 +72,7 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
         optChange(this.getParent(), { ...opts });
 
         //remove field if empty obj
-        if (Object.values(opts).every(v => v == undefined || v == '')) {
+        if (Object.values(opts).every(v => v == undefined || v == '' || v == null)) {
           optChange(_k, undefined);
         }
       });
