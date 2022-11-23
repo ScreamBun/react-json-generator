@@ -62,7 +62,7 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
         return {
           opts: {
             ...prevState.opts,
-            [_k]: v
+            [_k.slice(_k.lastIndexOf('.')+1)]: v
           }
         };
       }, () => {
