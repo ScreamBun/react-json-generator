@@ -160,6 +160,11 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
         const { opts } = this.state;
 
         optChange(this.getParent(), [...objectValues(opts)]);
+
+        //remove field if empty arr 
+/*         if (Object.values(opts).every(v => v == undefined || v == '' || v == null)) {
+          optChange(_k, undefined);
+        } */
       });
 
     } else {

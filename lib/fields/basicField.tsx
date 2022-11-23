@@ -79,9 +79,6 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
         default:
           v = value;
       }
-      if (v == '') {
-        v = undefined;
-      }
 
       optChange(this.getParent(), v, arr);
     });

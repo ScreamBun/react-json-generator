@@ -62,7 +62,7 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
         return {
           opts: {
             ...prevState.opts,
-            [_k.slice(_k.lastIndexOf('.')+1)]: v
+            [_k.slice(_k.lastIndexOf('.') + 1)]: v
           }
         };
       }, () => {
@@ -70,7 +70,13 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
         const { opts } = this.state;
 
         optChange(this.getParent(), { ...opts });
+
+        //remove field if empty obj
+        if (Object.values(opts).every(v => v == undefined || v == '')) {
+          optChange(_k, undefined);
+        }
       });
+
     } else {
       this.setState((prevState) => {
         return {
