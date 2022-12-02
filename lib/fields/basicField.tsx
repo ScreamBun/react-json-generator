@@ -105,21 +105,6 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
     if (time == '') {
       value = undefined;
 
-/*     } else if (typeof time == "string") {
-      const isChar = /\D/.test(time);
-
-      if (moment(time).isValid()) {
-        value = moment(time).valueOf(); //change valid string to millisec
-
-      } else if (isChar) {
-        console.log("Invalid datetime str: no characters allowed.");
-        value = undefined;
-
-      } else {
-        console.log("Invalid datetime str: numeric gibberish.");
-        value = undefined;
-      } */
-
     } else {
       value = moment(time).valueOf();
     }
@@ -131,6 +116,14 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
     }
 
     optChange(this.getParent(), value, arr);
+  }
+
+  clearDatetime(e: React.KeyboardEvent<HTMLElement>) {
+    if (e.key == 'Backspace' || e.key == 'Delete') {
+      this.setState({ value: '' });
+    } else {
+      e.preventDefault();
+    }
   }
 
   render() {
@@ -148,7 +141,7 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
         case 'integer':
           if (def.title && def.title.includes("Date Time")) {
             //any day before today is not valid
-            var valid = function (current: { isAfter: (arg0: Moment) => any; }) {
+            var today = function (current: { isAfter: (arg0: Moment) => any; }) {
               return current.isAfter(moment().subtract(1, 'day'));
             };
 
@@ -156,8 +149,8 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
               <FormGroup>
                 <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
                 <Datetime
-                  isValidDate={valid}
-                  inputProps={{ placeholder: 'YYYY-MM-DD HH:mm:ss'}}
+                  isValidDate={today}
+                  inputProps={{ placeholder: 'YYYY-MM-DD HH:mm:ss', required: required, onKeyDown: this.clearDatetime }}
                   onChange={(value) => this.setTime(value)}
                   dateFormat='YYYY-MM-DD'
                   timeFormat='HH:mm:ss'
@@ -179,6 +172,7 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
                   parent={this.getParent()}
                   onChange={this.handleChange}
                   value={value}
+                  required={required}
                 />
                 {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
               </FormGroup>
@@ -195,6 +189,7 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
                 parent={this.getParent()}
                 onChange={this.handleChange}
                 value={value}
+                required={required}
               />
               {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
             </FormGroup>
@@ -213,6 +208,7 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
                       parent={this.getParent()}
                       onChange={this.handleChange}
                       value={value}
+                      required={required}
                     />
                     {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
                   </FormGroup>
@@ -233,6 +229,7 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
                   parent={this.getParent()}
                   onChange={this.handleChange}
                   value={value}
+                  required={required}
                 />
                 {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
               </FormGroup>

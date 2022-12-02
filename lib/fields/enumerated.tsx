@@ -77,6 +77,7 @@ const EnumeratedField: FunctionComponent<EnumeratedFieldProps> = props => {
         title={name}
         className="selectpicker"
         onChange={e => change(e.target.value)}
+        required={required}
       >
         <option data-subtext={`${name} options`} value='' >{`${name} options`}</option>
         {defOpts}

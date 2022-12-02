@@ -193,6 +193,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
             idx={index}
             name={'$ref' in field ? field.$ref.replace(/^#\/definitions\//, '') : ''}
             parent={this.getParent()}
+            required={required}
           />
         )));
 
@@ -209,6 +210,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
               idx={index}
               name={'$ref' in field ? field.$ref.replace(/^#\/definitions\//, '') : ''}
               parent={this.getParent()}
+              required={required}
             />
           )));
 
@@ -233,6 +235,7 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
               idx={i}
               name={fieldName}
               parent={this.getParent()}
+              required={required}
             />
           );
         }

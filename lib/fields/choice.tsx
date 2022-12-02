@@ -85,7 +85,7 @@ class ChoiceField extends Component<ChoiceFieldProps, ChoiceFieldState> {
           optChange={optChange}
           name={selected}
           parent={this.getParent()}
-          required
+          required={required}
         />
       );
     }
@@ -95,11 +95,17 @@ class ChoiceField extends Component<ChoiceFieldProps, ChoiceFieldState> {
         <h4>{name}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
         {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
         <div className="col-12 my-1 px-0">
-          <Input type="select" name={name} title={name} className="selectpicker" onChange={this.handleChange}>
+          <Input
+            type="select"
+            name={name}
+            title={name}
+            className="selectpicker"
+            onChange={this.handleChange}
+            required={required}
+          >
             <option data-subtext={`${name} options`} value='' >{`${name} options`}</option>
             {defOpts}
           </Input>
-
           <div className="col-12 py-2">
             {selectedDef}
           </div>
