@@ -52,7 +52,7 @@ class Generator extends Component<GeneratorProps, GeneratorState> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onChange(key: string, val: any, _ai?: boolean|number) {
+  onChange(key: string, val: any, _ai?: boolean | number) {
     this.setState(prevState => {
       const { message } = prevState;
       const keys = key.split('.');
@@ -70,36 +70,39 @@ class Generator extends Component<GeneratorProps, GeneratorState> {
         message
       };
     },
-    () => {
-      const { name, onChange } = this.props;
-      if (onChange) {
-        const { message, schema, validate } = this.state;
-        const changes: GeneratorChanges = {
-          jsObject: message,
-          isValid: false,
-          errors: []
-        };
-        if (validate) {
-          // TODO: Validate message, more options??
-          let tmpMsg = message;
-          if ('properties' in schema && name in schema.properties) {
-            tmpMsg = {
-              [name]: message
-            };
-          }
-          try {
-            const valid = this.validator.validate(schema, tmpMsg);
-            if (!valid && this.validator.errors) {
-              changes.errors = this.validator.errors;
+      () => {
+        const { name, onChange } = this.props;
+
+        if (onChange) {
+          const { message, schema, validate } = this.state;
+
+          const changes: GeneratorChanges = {
+            jsObject: message,
+            isValid: false,
+            errors: []
+          };
+          if (validate) {
+            // TODO: Validate message, more options??
+            let tmpMsg = message;
+            if ('properties' in schema && name in schema.properties) {
+              tmpMsg = {
+                [name]: message
+              };
             }
-          } catch (err) {
-            changes.errors.push(err as ErrorObject);
+            try {
+              const valid = this.validator.validate(schema, tmpMsg);
+              //TODO: check schema validation loading here ? 
+              if (!valid && this.validator.errors) {
+                changes.errors = this.validator.errors;
+              }
+            } catch (err) {
+              changes.errors.push(err as ErrorObject);
+            }
+            changes.isValid = changes.errors.length === 0;
           }
-          changes.isValid = changes.errors.length === 0;
+          onChange(changes);
         }
-        onChange(changes);
-      }
-    });
+      });
   }
 
   getContext(): GeneratorProviderContext {
@@ -121,12 +124,12 @@ class Generator extends Component<GeneratorProps, GeneratorState> {
     }
 
     return (
-      <GeneratorContext.Provider value={ this.getContext() }>
+      <GeneratorContext.Provider value={this.getContext()}>
         <Field
           root
-          name={ name }
-          def={ schema.definitions[name] }
-          optChange={ this.onChange }
+          name={name}
+          def={schema.definitions[name]}
+          optChange={this.onChange}
         />
       </GeneratorContext.Provider>
     );

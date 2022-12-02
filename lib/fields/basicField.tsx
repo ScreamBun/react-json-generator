@@ -87,6 +87,7 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
     });
   }
 
+  //Button onClick: set ID in CommandID field
   setID = () => {
     const { arr, optChange } = this.props;
 
@@ -95,24 +96,38 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
     optChange(this.getParent(), randomID, arr);
   }
 
+  //Timestamp validation 
   setTime(time: string | Moment) {
     const { arr, optChange } = this.props;
+    const now = moment();
 
-    //translate value to milliseconds
     let value;
-    if (typeof time == "string") {
-      //validation: numeric input only
+    if (time == '') {
+      value = undefined;
+
+/*     } else if (typeof time == "string") {
+      const isChar = /\D/.test(time);
+
       if (moment(time).isValid()) {
-        value = moment(time).valueOf();
+        value = moment(time).valueOf(); //change valid string to millisec
+
+      } else if (isChar) {
+        console.log("Invalid datetime str: no characters allowed.");
+        value = undefined;
+
       } else {
-        value = time.replace(/\D/g, '');
-      }
+        console.log("Invalid datetime str: numeric gibberish.");
+        value = undefined;
+      } */
+
     } else {
       value = moment(time).valueOf();
     }
 
-    if (value == '') {
-      value = undefined;
+    //check time is past = NOW
+    if (moment(time).isValid() && moment(time) < now) {
+      console.warn("Datetime input is past current time. Setting datetime input to NOW...")
+      value = now.valueOf();
     }
 
     optChange(this.getParent(), value, arr);
@@ -132,7 +147,7 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
         case 'number':
         case 'integer':
           if (def.title && def.title.includes("Date Time")) {
-            //anytime before today is not valid
+            //any day before today is not valid
             var valid = function (current: { isAfter: (arg0: Moment) => any; }) {
               return current.isAfter(moment().subtract(1, 'day'));
             };
@@ -142,10 +157,11 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
                 <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
                 <Datetime
                   isValidDate={valid}
-                  inputProps={{ placeholder: 'MM/DD/YYYY HH:mm:ss' }}
+                  inputProps={{ placeholder: 'YYYY-MM-DD HH:mm:ss'}}
                   onChange={(value) => this.setTime(value)}
-                  dateFormat='MM/DD/YYYY'
+                  dateFormat='YYYY-MM-DD'
                   timeFormat='HH:mm:ss'
+                  strictParsing
                 />
                 {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
               </FormGroup>

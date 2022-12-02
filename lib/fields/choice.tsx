@@ -53,14 +53,7 @@ class ChoiceField extends Component<ChoiceFieldProps, ChoiceFieldState> {
       const { optChange } = this.props;
       const { selected } = this.state;
 
-      let value;
-      if (selected == '') {
-        value = undefined;
-      } else {
-        value = selected;
-      }
-
-      optChange(this.getParent(), value);
+      optChange(this.getParent(), selected);
     });
   }
 

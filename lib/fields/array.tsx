@@ -110,9 +110,10 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
       const { name, optChange } = this.props;
       const { max, opts } = this.state;
 
-      optChange(this.getParent(), Array.from(objectValues(opts)));
       if (max) {
         console.error(`Cannot have more than ${this.opts.max} items for ${name}`);
+      } else {
+        optChange(this.getParent(), Array.from(objectValues(opts)));
       }
     });
   }
@@ -137,11 +138,10 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
     }, () => {
       const { name, optChange } = this.props;
       const { min, opts } = this.state;
-
-      optChange(this.getParent(), Array.from(objectValues(opts)));
-
       if (min) {
         console.error(`Cannot have less than ${this.opts.min} items for ${name}`);
+      } else {
+        optChange(this.getParent(), Array.from(objectValues(opts)));
       }
     });
   }
@@ -160,11 +160,6 @@ class ArrayField extends Component<ArrayFieldProps, ArrayFieldState> {
         const { opts } = this.state;
 
         optChange(this.getParent(), [...objectValues(opts)]);
-
-        //remove field if empty arr 
-/*         if (Object.values(opts).every(v => v == undefined || v == '' || v == null)) {
-          optChange(_k, undefined);
-        } */
       });
 
     } else {
