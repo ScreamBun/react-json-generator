@@ -99,29 +99,32 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
   //Timestamp validation 
   setTime(time: string | Moment) {
     const { arr, optChange } = this.props;
-    const now = moment();
+    const now = moment().valueOf();
 
     let value;
-    if (time == '') {
-      value = undefined;
-
+    //check pattern 
+    if (typeof time == 'string') {
+      const validFormat = (/[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]/).test(time);
+      if (validFormat) {
+        value = moment(time).valueOf();
+      } else {
+        value = undefined;
+      }
     } else {
       value = moment(time).valueOf();
     }
 
     //check time is past = NOW
-    if (moment(time).isValid() && moment(time) < now) {
+    if (value && value < now) {
       console.warn("Datetime input is past current time. Setting datetime input to NOW...")
-      value = now.valueOf();
+      value = now;
     }
 
     optChange(this.getParent(), value, arr);
   }
 
   clearDatetime(e: React.KeyboardEvent<HTMLElement>) {
-    if (e.key == 'Backspace' || e.key == 'Delete') {
-      this.setState({ value: '' });
-    } else {
+    if (!(e.key == 'Backspace' || e.key == 'Delete')) {
       e.preventDefault();
     }
   }
@@ -149,6 +152,7 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
               <FormGroup>
                 <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
                 <Datetime
+                  value={value}
                   isValidDate={today}
                   inputProps={{ placeholder: 'YYYY-MM-DD HH:mm:ss', required: required, onKeyDown: this.clearDatetime }}
                   onChange={(value) => this.setTime(value)}
