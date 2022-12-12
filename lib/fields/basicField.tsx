@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import { Button, Col, FormGroup, FormText, Input, Row } from 'reactstrap';
 import { PrimitivePropertyDefinitions } from './schema';
 import { v4 as uuid4 } from 'uuid';
-import Datetime from "react-datetime";
-import { Moment } from 'moment';
-import moment from 'moment';
-import "react-datetime/css/react-datetime.css";
+import dayjs from 'dayjs';
 
 // Const Vars
 const BasicFieldTypes = [
@@ -87,6 +84,26 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
     });
   }
 
+  handleDatetimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      value: e.target.value
+
+    }, () => {
+      const { optChange } = this.props;
+      const { value } = this.state;
+
+      let v = value;
+
+      if (v == '') {
+        v = undefined;
+      } else {
+        v = dayjs(value).valueOf();
+      }
+
+      optChange(this.getParent(), v);
+    });
+  }
+
   //Button onClick: set ID in CommandID field
   setID = () => {
     const { arr, optChange } = this.props;
@@ -94,39 +111,6 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
     const randomID = uuid4();
     this.setState({ value: randomID });
     optChange(this.getParent(), randomID, arr);
-  }
-
-  //Timestamp validation 
-  setTime(time: string | Moment) {
-    const { arr, optChange } = this.props;
-    const now = moment().valueOf();
-
-    let value;
-    //check pattern 
-    if (typeof time == 'string') {
-      const validFormat = (/[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]/).test(time);
-      if (validFormat) {
-        value = moment(time).valueOf();
-      } else {
-        value = undefined;
-      }
-    } else {
-      value = moment(time).valueOf();
-    }
-
-    //check time is past = NOW
-    if (value && value < now) {
-      console.warn("Datetime input is past current time. Setting datetime input to NOW...")
-      value = now;
-    }
-
-    optChange(this.getParent(), value, arr);
-  }
-
-  clearDatetime(e: React.KeyboardEvent<HTMLElement>) {
-    if (!(e.key == 'Backspace' || e.key == 'Delete')) {
-      e.preventDefault();
-    }
   }
 
   render() {
@@ -143,22 +127,17 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
         case 'number':
         case 'integer':
           if (def.title && def.title.includes("Date Time")) {
-            //any day before today is not valid
-            var today = function (current: { isAfter: (arg0: Moment) => any; }) {
-              return current.isAfter(moment().subtract(1, 'day'));
-            };
-
             return (
               <FormGroup>
                 <h4>{fieldName}{required ? <span style={{ color: 'red' }}>*</span> : ''}</h4>
-                <Datetime
-                  value={value}
-                  isValidDate={today}
-                  inputProps={{ placeholder: 'YYYY-MM-DD HH:mm:ss', required: required, onKeyDown: this.clearDatetime }}
-                  onChange={(value) => this.setTime(value)}
-                  dateFormat='YYYY-MM-DD'
-                  timeFormat='HH:mm:ss'
-                  strictParsing
+                <Input
+                  required={required}
+                  name={name}
+                  type="datetime-local"
+                  onChange={this.handleDatetimeChange}
+                  min={dayjs().format('YYYY-MM-DD HH:mm:ss')}
+                  step='60'
+                  pattern='/[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]/'
                 />
                 {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
               </FormGroup>
