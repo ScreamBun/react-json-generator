@@ -91,7 +91,7 @@ class Generator extends Component<GeneratorProps, GeneratorState> {
             }
             try {
               const valid = this.validator.validate(schema, tmpMsg);
-              //TODO: check schema validation loading here ? 
+              //TODO: check schema fully loaded here ? 
               if (!valid && this.validator.errors) {
                 changes.errors = this.validator.errors;
               }

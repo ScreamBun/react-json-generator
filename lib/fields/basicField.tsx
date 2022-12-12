@@ -135,8 +135,8 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
                   name={name}
                   type="datetime-local"
                   onChange={this.handleDatetimeChange}
+                  step="any"
                   min={dayjs().format('YYYY-MM-DD HH:mm:ss')}
-                  step='60'
                   pattern='/[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]/'
                 />
                 {def.description ? <FormText color="muted">{def.description}</FormText> : ''}
