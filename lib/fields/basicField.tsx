@@ -76,11 +76,22 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
         default:
           v = value;
       }
+
       if (v == '') {
         v = undefined;
       }
-
       optChange(this.getParent(), v, arr);
+    });
+  }
+
+  handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      value: e.target.checked
+    }, () => {
+      const { optChange } = this.props;
+      const { value } = this.state;
+
+      optChange(this.getParent(), value);
     });
   }
 
@@ -170,8 +181,8 @@ class BasicField extends Component<BasicFieldProps, BasicFieldState> {
                 type='checkbox'
                 name={name}
                 parent={this.getParent()}
-                onChange={this.handleChange}
                 value={value}
+                onChange={this.handleCheckboxChange}
                 required={required}
               />
               {def.description ? <FormText color="muted">{def.description}</FormText> : ''}

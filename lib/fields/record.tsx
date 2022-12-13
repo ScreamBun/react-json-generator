@@ -39,7 +39,7 @@ class RecordField extends Component<RecordFieldProps, RecordFieldState> {
     this.optChange = this.optChange.bind(this);
 
     this.state = {
-      open: false,
+      open: this.props.required? true: false,
       opts: {}
     };
   }
